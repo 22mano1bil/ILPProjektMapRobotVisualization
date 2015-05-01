@@ -13,9 +13,6 @@
 
         <link rel="shortcut icon" href="img/favicon2.ico">
 
-        <!-- Datetimepicker -->
-        <link href="css/bootstrap-datepicker.css" rel="stylesheet" type="text/css">
-
         <!-- Bootstrap Core CSS -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
 
@@ -26,6 +23,8 @@
         <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         <link href="font-awesome/css/h1font.css" rel="stylesheet" type="text/css">
         <link href="bootstrap-fileinput-master/css/fileinput.min.css" rel="stylesheet" type="text/css">
+        
+        <link rel='stylesheet' type='text/css' href='css/x3dom.css'/>
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -37,7 +36,46 @@
     </head>
 
     <body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+        
+        
+        
+        <!-- Navigation -->
+        <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <a class="navbar-brand page-scroll" href="#page-top">
+                        <i class="fa fa-car"></i>
+                    </a>
+                </div>
 
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
+                    <ul class="nav navbar-nav">
+                        <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
+                        <li class="hidden">
+                            <a href="#page-top"></a>
+                        </li>
+                        <li>
+                            <a class="page-scroll" href="#fileupload">File Upload</a>
+                        </li>
+                        <li>
+                            <a class="page-scroll" href="#visualization">Visualization</a>
+                        </li>
+                        <li>
+                            <a class="page-scroll" href="#contact"><i class="fa fa-envelope"></i></a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.navbar-collapse -->
+            </div>
+            <!-- /.container -->
+        </nav>
+        
+        
+        
         <!-- Intro Header -->
         <header class="intro intro1">
             <div class="intro-body">
@@ -55,6 +93,9 @@
                 </div>
             </div>
         </header>
+        
+        
+        
         <!-- Intro Header -->
         <header id="fileupload" class="intro intro2">
             <div class="intro-body">
@@ -66,10 +107,10 @@
                             <form id = "uploadForm">
                                 <h4>Floorplan in JSON: </h4><input id="floorplanjson" name="floorplanjson" type="file" data-show-preview="false">
                                 </br>
-                                <h4>3D-Model in X3D: </h4><input id="x3dmodel" name="x3dmodel" type="file" data-show-preview="false">
+                                <h4>3D-Model in X3D (optional): </h4><input id="x3dmodel" name="x3dmodel" type="file" data-show-preview="false">
                                 </br></br>
                                 <button id="submitFiles"  class="btn btn-circle">
-                                    <a href="#visu" class="page-scroll">
+                                    <a href="#visualization" class="page-scroll">
                                         <i class="fa fa-angle-double-down animated"></i>
                                     </a>
                                 </button>
@@ -80,8 +121,24 @@
             </div>
         </header>		
         <!-- actualdata Section -->
-        <section id="visu" class="container content-section text-center">
+        <section id="visualization" class="container content-section text-center">
             <h1>Visualization</h1>
+            <script>
+                function redNose()
+                {
+                    if (document.getElementById('Deer__MA_Nose').getAttribute('diffuseColor') != '1 0 0')
+                        document.getElementById('Deer__MA_Nose').setAttribute('diffuseColor', '1 0 0');
+                    else
+                        document.getElementById('Deer__MA_Nose').setAttribute('diffuseColor', '0 0 0');
+                }
+            </script>
+            <x3d>
+                <scene>
+                    <viewpoint position="-1.94639 1.79771 -2.89271" orientation="0.03886 0.99185 0.12133 3.75685"></viewpoint>
+                    <Inline nameSpaceName="Deer" mapDEFToID="true"
+                            onclick='redNose();' url="Deer.x3d" />
+                </scene>
+            </x3d>
         </section>	
 
 
@@ -109,21 +166,8 @@
         <!-- Custom Theme JavaScript -->
         <script src="js/grayscale.js"></script>
 
-        <!-- Highcharts -->
-        <script src="js/highcharts.js"></script>
-
-        <script src="js/charts/chartSensorCompersionTemperature.js"></script>	
-        <script src="js/charts/chartSensorCompersionHumidity.js"></script>	
-        <script src="js/charts/chartTimespanCompersionTemperature.js"></script>	
-        <script src="js/charts/chartTimespanCompersionHumidity.js"></script>	
-
-        <!--Datetimepicker -->
-        <script src="js/bootstrap-datepicker.js"></script>	
-
-        <script src="js/locales/bootstrap-datepicker.de.js"></script>	
-
         <script src="bootstrap-fileinput-master/js/fileinput.min.js"></script>
-
+<script type='text/javascript' src='js/x3dom.js'> </script>
         <script src="js/specificcontroller.js"></script>
     </body>
 

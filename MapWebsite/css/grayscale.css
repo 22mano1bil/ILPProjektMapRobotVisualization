@@ -4,6 +4,14 @@
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+#watch{
+    display:none;
+}
+form{
+    /* background: rgba(255, 255, 255, 0.15); */
+    /* border-color: red; */
+    /* border-width: 1px; */
+}
 .datepickercss{
   width:100px
 }
@@ -227,6 +235,7 @@ a:focus {
 .btn-circle i.animated {
     -webkit-transition-property: -webkit-transform;
     -webkit-transition-duration: 1s;
+    /* align-content: center; */
     -moz-transition-property: -moz-transform;
     -moz-transition-duration: 1s;
 }

@@ -1083,7 +1083,10 @@ select,
 textarea {
     font-family: inherit;
     font-size: inherit;
-    line-height: inherit
+    line-height: inherit;
+    color:black;
+    float:right;
+    padding: 6px 12px;
 }
 a {
     color: #337ab7;
@@ -1263,7 +1266,8 @@ h3 {
 }
 .h4,
 h4 {
-    font-size: 18px
+    font-size: 18px;
+    float:left;
 }
 .h5,
 h5 {
@@ -3060,6 +3064,7 @@ textarea.form-group-lg .form-control {
     }
 }
 .btn {
+    float: inherit;
     display: inline-block;
     padding: 6px 12px;
     margin-bottom: 0;

@@ -39,5 +39,27 @@ $('#submitFiles').click(function() {
     }
     return false;
 });
+$('#submitFloormapJSON').click(function() {
+    if ((typeof $('#floorplanjson')[0].files[0].name !== 'undefined') &&
+            endsWith($('#floorplanjson')[0].files[0].name, '.json')) {
+        var data = new FormData();
 
+        var floorplanjson = $('#floorplanjson')[0].files;
+        data.append('floorplanjson', floorplanjson[0]);
+        console.log(floorplanjson);
+        $.ajax({
+            url: '/api/photo',
+            type: 'POST',
+            data: data,
+            cache: false,
+            contentType: false,
+            enctype: 'multipart/form-data',
+            processData: false,
+            success: function(response) {
+            console.log(response);
+            }
+        });
+    }
+    return false;
+});
 

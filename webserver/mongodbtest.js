@@ -1,3 +1,4 @@
+/*not used*/
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/test2');
 
@@ -8,7 +9,8 @@ db.once('open', function(callback) {
     
 });
 var kittySchema = mongoose.Schema({
-        name: String
+        name: String,
+        age: Number
     })
 
 // NOTE: methods must be added to the schema before compiling it with mongoose.model()
@@ -22,8 +24,8 @@ var kittySchema = mongoose.Schema({
     var Kitten = mongoose.model('Kitten', kittySchema)
 
 
-    var silence = new Kitten({name: 'Silence'})
-    console.log(silence.name) // 'Silence'
+    var silence = new Kitten({name: 'Silence'}, {age:6})
+    console.log(silence.age) // 'Silence'
 
     silence.save(function(err, silence) {
         if (err)

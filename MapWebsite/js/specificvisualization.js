@@ -1,12 +1,12 @@
 io = io.connect()
 
-// Emit ready event.
-io.emit('ready') 
-
-// Listen for the talk event.
-io.on('talk', function(data) {
-    alert(data.message)
-})  
+//// Emit ready event.
+//io.emit('ready') 
+//
+//// Listen for the talk event.
+//io.on('talk', function(data) {
+//    alert(data.message)
+//})  
 
 // Listen for the new visitor event.
 io.on('actualPosition', function(data) {

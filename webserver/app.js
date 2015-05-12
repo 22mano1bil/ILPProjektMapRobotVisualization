@@ -23,17 +23,19 @@ var server = httpserver.listen(7088, 'localhost', function() {
 
 io.on('connection', function(socket){
     console.log("a new user");
-  //socket.emit('actualPosition', { some: 'data' });
+    //source:http://psitsmike.com/2011/10/node-js-and-socket-io-multiroom-chat-tutorial/
+    socket.on('switchRoom', function(newroom){
+        if (typeof socket.room !== 'undefined') {
+            // leave the current room (stored in session)
+            socket.leave(socket.room);
+            console.log('socket.leave'+socket.room);
+        }
+            // join new room, received as function parameter
+            socket.join(newroom);
+            console.log('socket.join'+newroom);
+            socket.room = newroom;
+    });
 });
-
-//broadcast realtime
-// Setup the ready route, and emit talk event.
-//app.io.route('ready', function(req) {
-//    req.io.emit('talk', {
-//        message: 'io event from an io route on the server'
-//    })
-//})
-
 
 
 // Mongoose connection to MongoDB (ted/ted is readonly)

@@ -3,6 +3,6 @@
     "szenario": {
         "szenarioname": "ersteVersuche",
         "floorplanJsonREF": "fp.json",
-        "modelREF": "3dmodel.x3d"
+        "modelX3DREF": "3dmodel.x3d"
     }
 }

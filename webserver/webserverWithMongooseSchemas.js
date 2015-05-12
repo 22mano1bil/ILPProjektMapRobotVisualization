@@ -10,7 +10,7 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 // Mongoose import
 var mongoose = require('mongoose');
-var models = require('./models');
+
 
 
 //broadcast realtime
@@ -34,15 +34,15 @@ mongoose.connect('mongodb://localhost/testuser', function(error) {
 // Mongoose Schema definition
 var Schema = mongoose.Schema;
 
-//var GroupSchema = new Schema({
-//    groupname: {type: String, unique: true, required: true},
-//    _szenario_ids: [{
-//            type: mongoose.Schema.Types.ObjectId,
-//            ref: 'Szenarios'
-//        }]
-//});
+var GroupSchema = new Schema({
+    groupname: {type: String, unique: true, required: true},
+    _szenario_ids: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Szenarios'
+        }]
+});
 // Mongoose Model definition
-var Group = models.Group;
+var Group = mongoose.model('Group', GroupSchema);
 
 
 //Received data from roboter
@@ -62,9 +62,20 @@ app.post('/initGroup', function(req, res) {
     res.json(req.body);
 });
 
-
+// Mongoose Schema definition
+var SzenarioSchema = new Schema({
+	_group_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Group', 
+			required: true
+        },
+    szenarioname: {type: String, unique: true, required: true},
+    timestamp: Date,
+    floorplanJsonREF: {type: String, required: true},
+    modelX3DREF: String
+});
 // Mongoose Model definition
-var Szenario = models.Szenario;
+var Szenario = mongoose.model('Szenario', SzenarioSchema);
 
 yyyymmdd = function(d) {
    var yyyy = d.getFullYear().toString();
@@ -117,8 +128,22 @@ app.post('/initSzenario', function(req, res) {
     res.json(req.body);
 });
 
+// Mongoose Schema definition
+var ActualPositionSchema = new Schema({
+    robotergroupname: {type: String, required: true},
+    actualPosition: {
+        point: {
+            x: Number,
+            y: Number
+        },
+        orientation: {
+            x: Number,
+            y: Number
+        }
+    }
+});
 // Mongoose Model definition
-var ActualPosition = models.ActualPosition;
+var ActualPosition = mongoose.model('ActualPosition', ActualPositionSchema);
 
 //Received data from roboter
 app.post('/actualPosition', function(req, res) {
@@ -137,8 +162,17 @@ app.post('/actualPosition', function(req, res) {
     res.json(req.body);
 });
 
+var NewPathSchema = new Schema({
+    robotergroupname: {type: String, required: true},
+    newPath: [
+        {
+            x: Number,
+            y: Number
+        }
+    ]
+});
 // Mongoose Model definition
-var NewPath = models.NewPath;
+var NewPath = mongoose.model('NewPath', NewPathSchema);
 //Received data from roboter
 app.post('/newPath', function(req, res) {
     //log

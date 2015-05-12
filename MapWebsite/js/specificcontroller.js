@@ -1,16 +1,14 @@
-$("#floorplanjson").fileinput({
-    allowedFileExtensions: ["json"],
-    showUpload: false
-});
-$("#x3dmodel").fileinput({
-    allowedFileExtensions: ["x3d"],
-    showUpload: false
-});
-function endsWith(str, suffix) {
-    return str.indexOf(suffix, str.length - suffix.length) !== -1;
-}
-
-$('#sensorcomparison #aggregation .active input').val();
+//$("#floorplanjson").fileinput({
+//    allowedFileExtensions: ["json"],
+//    showUpload: false
+//});
+//$("#x3dmodel").fileinput({
+//    allowedFileExtensions: ["x3d"],
+//    showUpload: false
+//});
+//function endsWith(str, suffix) {
+//    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+//}
 
 $('#createwatch').click(function() { 
     var lastmodi = $(this).find('.active input').val();

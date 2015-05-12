@@ -1,4 +1,4 @@
-io = io.connect()
+var io = io();
 
 //// Emit ready event.
 //io.emit('ready') 
@@ -8,15 +8,11 @@ io = io.connect()
 //    alert(data.message)
 //})  
 
-// Listen for the new visitor event.
+// Listen for the actualPosition event.
 io.on('actualPosition', function(data) {
     console.log(data);
 })
-// Listen for the new visitor event.
-io.on('firstPath', function(data) {
-    console.log(data);
-})
-// Listen for the new visitor event.
+// Listen for the newPath event.
 io.on('newPath', function(data) {
     console.log(data);
 })

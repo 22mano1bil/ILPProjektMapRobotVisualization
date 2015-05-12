@@ -1,8 +1,8 @@
 //broadcast realtime
-var express = require('express.io');
-var app = express();
-app = require('express.io')();
-app.http().io();
+var express = require('express')
+var app     = express();
+var httpserver  = require('http').createServer(app);
+var io      = require('socket.io').listen(httpserver);
 //path
 var path = require('path');
 // parse application/json
@@ -12,6 +12,19 @@ app.use(bodyParser.json());
 var mongoose = require('mongoose');
 var models = require('./models');
 
+//default send website and make it listen on port
+app.use(express.static(path.resolve(__dirname + '/../MapWebsite')));
+var server = httpserver.listen(7088, 'localhost', function() {
+    var host = server.address().address;
+    var port = server.address().port;
+    console.log('Example app listening at http://%s:%s', host, port);
+});
+
+
+io.on('connection', function(socket){
+    console.log("a new user");
+  //socket.emit('actualPosition', { some: 'data' });
+});
 
 //broadcast realtime
 // Setup the ready route, and emit talk event.
@@ -48,8 +61,6 @@ app.post('/initGroup', function(req, res) {
         if (err)
             return console.error(err);
     });
-    //broadcast to clients
-    req.io.broadcast('initGroup', req.body);
     res.json(req.body);
 });
 
@@ -92,15 +103,12 @@ app.post('/initSzenario', function(req, res) {
             gr._szenario_ids.push(sz._id);
 			console.log(gr);
             gr.save(function(err, gr) {
-              console.log("saved: " + gr);
+               console.log("saved: " + gr);
                if (err)
                    return console.error(err);
             });
         }
     });
-
-    //broadcast to clients
-    req.io.broadcast('actualPosition', req.body);
     res.json(req.body);
 });
 
@@ -109,15 +117,23 @@ app.post('/actualPosition', function(req, res) {
     //log
     console.log("received POST /actualPosition : ");
     console.log(req.body);
+    var actualPositionObject = req.body;
     //save in mongodb
-    var ap = new ActualPosition(req.body);
-    ap.save(function(err, ap) {
-        console.log("saved: " + ap);
-        if (err)
-            return console.error(err);
+        Group.find({groupname:req.groupname}, function(err, gr) {
+        //get last szenario of this group
+		Szenario.findOne({groupid:gr._id}, {}, { sort: {'timestamp': 'desc'}}, function(err, lastszenario) {
+			console.log(lastszenario._id);
+                        actualPositionObject._szenario_id = lastszenario._id;
+                            var ap = new ActualPosition(actualPositionObject);
+                            ap.save(function(err, ap) {
+                                console.log("saved: " + ap);
+                                if (err)
+                                    return console.error(err);
+                                //broadcast to clients, send when saved (saving validates)
+                                io.emit('actualPosition', ap);
+                            });
+		});
     });
-    //broadcast to clients
-    req.io.broadcast('actualPosition', req.body);
     res.json(req.body);
 });
 
@@ -127,19 +143,28 @@ app.post('/newPath', function(req, res) {
     console.log("received POST /newPath : ");
     console.log(req.body);
     //save in mongodb
-    var np = new NewPath(req.body);
-    np.save(function(err, np) {
-        console.log("saved: " + np);
-        if (err)
-            return console.error(err);
+    var newPathObject = req.body;
+    //get group
+    Group.find({groupname:req.groupname}, function(err, gr) {
+        //get last szenario of this group
+		Szenario.findOne({groupid:gr._id}, {}, { sort: {'timestamp': 'desc'}}, function(err, lastszenario) {
+			console.log(lastszenario._id);
+                        newPathObject._szenario_id = lastszenario._id;
+                            var np = new NewPath(newPathObject);
+                            np.save(function(err, np) {
+                                console.log("saved: " + np);
+                                if (err)
+                                    return console.error(err);
+                                //broadcast to clients, send when saved (saving validates)
+                                io.emit('newPath', np);
+                            });
+		});
     });
-    //broadcast to clients
-    req.io.broadcast('firstPath', req.body);
     res.json(req.body);
 });
 
 
-
+//TESTING AND READING DB
 
 // URLS management
 app.get('/Groups', function(req, res) {
@@ -154,6 +179,7 @@ app.get('/Szenarios', function(req, res) {
         res.json(docs);
     });
 });
+
 // URLS management
 //get last szenario of group
 app.get('/Sz123/:groupname', function(req, res) {
@@ -177,21 +203,6 @@ app.get('/NewPaths', function(req, res) {
         res.json(docs);
     });
 });
-//app.get('/users/:email', function (req, res) {
-//    if (req.params.email) {
-//        ActualPosition.find({ email: req.params.email }, function (err, docs) {
-//            res.json(docs);
-//        });
-//    }
-//});
-
-//var dummyroboter = require('./dummyroboter.js');
 
 
-//default send website and make it listen on port
-app.use(express.static(path.resolve(__dirname + '/../MapWebsite')));
-var server = app.listen(7088, 'localhost', function() {
-    var host = server.address().address;
-    var port = server.address().port;
-    console.log('Example app listening at http://%s:%s', host, port);
-});
+

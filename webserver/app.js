@@ -30,20 +30,11 @@ mongoose.connect('mongodb://localhost/testuser', function(error) {
     }
 });
 
-
-// Mongoose Schema definition
-var Schema = mongoose.Schema;
-
-//var GroupSchema = new Schema({
-//    groupname: {type: String, unique: true, required: true},
-//    _szenario_ids: [{
-//            type: mongoose.Schema.Types.ObjectId,
-//            ref: 'Szenarios'
-//        }]
-//});
-// Mongoose Model definition
+// Mongoose Model definitions
 var Group = models.Group;
-
+var Szenario = models.Szenario;
+var ActualPosition = models.ActualPosition;
+var NewPath = models.NewPath;
 
 //Received data from roboter
 app.post('/initGroup', function(req, res) {
@@ -61,10 +52,6 @@ app.post('/initGroup', function(req, res) {
     req.io.broadcast('initGroup', req.body);
     res.json(req.body);
 });
-
-
-// Mongoose Model definition
-var Szenario = models.Szenario;
 
 yyyymmdd = function(d) {
    var yyyy = d.getFullYear().toString();
@@ -117,9 +104,6 @@ app.post('/initSzenario', function(req, res) {
     res.json(req.body);
 });
 
-// Mongoose Model definition
-var ActualPosition = models.ActualPosition;
-
 //Received data from roboter
 app.post('/actualPosition', function(req, res) {
     //log
@@ -137,8 +121,6 @@ app.post('/actualPosition', function(req, res) {
     res.json(req.body);
 });
 
-// Mongoose Model definition
-var NewPath = models.NewPath;
 //Received data from roboter
 app.post('/newPath', function(req, res) {
     //log

@@ -22,18 +22,22 @@ var server = httpserver.listen(7088, 'localhost', function() {
 
 
 io.on('connection', function(socket){
+    socket.userID = Math.floor(Math.random()*1000000000000000).toString();;
+    socket.join(socket.userID);
     console.log("a new user");
     //source:http://psitsmike.com/2011/10/node-js-and-socket-io-multiroom-chat-tutorial/
-    socket.on('switchRoom', function(newroom){
+    socket.on('switchSzenario', function(szenarioID){
         if (typeof socket.room !== 'undefined') {
             // leave the current room (stored in session)
+            socket.leave(socket.user);
             socket.leave(socket.room);
-            console.log('socket.leave'+socket.room);
+            console.log('socket.leave '+socket.room);
         }
             // join new room, received as function parameter
-            socket.join(newroom);
-            console.log('socket.join'+newroom);
-            socket.room = newroom;
+            socket.join(szenarioID);
+            console.log('socket.join '+szenarioID);
+            socket.room = szenarioID;
+            sendExistingDataForSzenario(szenarioID, socket.userID);
     });
 });
 
@@ -66,7 +70,7 @@ app.post('/initGroup', function(req, res) {
     res.json(req.body);
 });
 
-yyyymmdd = function(d) {
+function yyyymmddHHMMSS(d) {
    var yyyy = d.getFullYear().toString();
    var mm = (d.getMonth()+1).toString(); // getMonth() is zero-based
    var dd  = d.getDate().toString();
@@ -82,7 +86,7 @@ app.post('/initSzenario', function(req, res) {
     console.log("received POST /initSzenario : ");
     console.log(req.body);
     var szObject = req.body.szenario;
-    var szObjectszname = szObject.szenarioname+ yyyymmdd(new Date());
+    var szObjectszname = szObject.szenarioname+ yyyymmddHHMMSS(new Date());
     
     szObject.szenarioname=szObjectszname;
     szObject.timestamp = new Date();
@@ -120,6 +124,7 @@ app.post('/actualPosition', function(req, res) {
     console.log("received POST /actualPosition : ");
     console.log(req.body);
     var actualPositionObject = req.body;
+    actualPositionObject.timestamp = new Date();
     //save in mongodb
         Group.find({groupname:req.groupname}, function(err, gr) {
         //get last szenario of this group
@@ -132,7 +137,7 @@ app.post('/actualPosition', function(req, res) {
                                 if (err)
                                     return console.error(err);
                                 //broadcast to clients, send when saved (saving validates)
-                                io.emit('actualPosition', ap);
+                                io.to(lastszenario._id).emit('actualPosition', ap);
                             });
 		});
     });
@@ -146,6 +151,7 @@ app.post('/newPath', function(req, res) {
     console.log(req.body);
     //save in mongodb
     var newPathObject = req.body;
+    newPathObject.timestamp = new Date();
     //get group
     Group.find({groupname:req.groupname}, function(err, gr) {
         //get last szenario of this group
@@ -158,12 +164,41 @@ app.post('/newPath', function(req, res) {
                                 if (err)
                                     return console.error(err);
                                 //broadcast to clients, send when saved (saving validates)
-                                io.emit('newPath', np);
+                                io.to(lastszenario._id).emit('newPath', np);
                             });
 		});
     });
     res.json(req.body);
 });
+
+
+function sendExistingDataForSzenario(szenarioID, userID) {
+    Szenario.find({_id:szenarioID}, function(err, szenario) {
+        if (err)
+            return console.error(err);
+        console.log('szenario');
+        console.log(szenario);
+        io.to(userID).emit('szenario', szenario);
+    });
+    NewPath.find({_szenario_id:szenarioID}, {}, { sort: {'timestamp': 'desc'}}, function(err, newPathArray) {
+        if (err)
+            return console.error(err);
+        console.log('newPathArray');
+        console.log(newPathArray);
+        io.to(userID).emit('newPathArray', newPathArray);
+    });    
+    ActualPosition.find({_szenario_id:szenarioID}, {}, { sort: {'timestamp': 'desc'}}, function(err, actualPositionArray) {
+        if (err)
+            return console.error(err);
+        console.log('actualPositionArray');
+        console.log(actualPositionArray);
+        io.to(userID).emit('actualPositionArray', actualPositionArray);
+    }); 
+}
+
+
+
+
 
 
 //TESTING AND READING DB

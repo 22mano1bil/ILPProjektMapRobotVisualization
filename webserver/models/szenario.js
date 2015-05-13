@@ -7,7 +7,7 @@ var SzenarioSchema = mongoose.Schema({
 			required: true
         },
     szenarioname: {type: String, unique: true, required: true},
-    timestamp: Date,
+    timestamp: {type: Date, required: true},
     floorplanJSONref: {type: String, required: true},
     modelX3Dref: String
 });

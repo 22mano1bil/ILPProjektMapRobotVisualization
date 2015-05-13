@@ -8,8 +8,8 @@ var SzenarioSchema = mongoose.Schema({
         },
     szenarioname: {type: String, unique: true, required: true},
     timestamp: Date,
-    floorplanJsonREF: {type: String, required: true},
-    modelX3DREF: String
+    floorplanJSONref: {type: String, required: true},
+    modelX3Dref: String
 });
 // Mongoose Model definition
 var Szenario = module.exports = mongoose.model('Szenario', SzenarioSchema);

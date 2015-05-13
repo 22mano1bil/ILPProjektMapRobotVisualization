@@ -2,7 +2,7 @@
     "groupname": "123",
     "szenario": {
         "szenarioname": "ersteVersuche",
-        "floorplanJsonREF": "fp.json",
-        "modelX3DREF": "3dmodel.x3d"
+        "floorplanJSONref": "fp.json",
+        "modelX3Dref": "3dmodel.x3d"
     }
 }

@@ -2,6 +2,7 @@ var io = io();
 
 $('#watchSzenarioSubmit').click(function () {
     var szenarioID = $('#szenarioname option:selected').val();
+    console.log(szenarioID);
     io.emit('switchSzenario', szenarioID);
 });
 
@@ -13,10 +14,26 @@ io.on('szenario', function (data) {
 });
 
 function buildNewSzenario(data) {
+    $('X3D scene').empty();
     $('X3D scene').append(addx3dModel(data));
+    $('X3D scene').append(addFloorplan(data));
     $('X3D scene').append(x3dExample());
 }
+$('X3D scene').append(addFloorplan());
 
+//auf json zugreifen
+function addFloorplan() {
+  var flickerAPI = "uploads/floorplan_test1.json";
+  $.getJSON( flickerAPI)
+    .done(function( data ) {
+//       console.log(data);
+       console.log(data['features']);
+       $.each(data['features'], function(i, v) {
+           if(v['properties']['value']=='limit')
+               console.log('limit');
+       });
+    });
+}
 function addx3dModel(data) {
 //    return "<inline url="+data['modelX3DREF']+"></inline>";
     return "<inline url=Deer.x3d></inline>";

@@ -1,7 +1,7 @@
 {
-    "groupname": "123",
+    "groupname": "12",
     "szenario": {
-        "szenarioname": "ersteVersuche",
+        "szenarioname": "ersteVersuche3",
         "floorplanJSONref": "fp.json",
         "modelX3Dref": "3dmodel.x3d"
     }

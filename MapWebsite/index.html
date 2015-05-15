@@ -63,11 +63,14 @@
                             <a href="#page-top"></a>
                         </li>
                         <li>
-                            <a class="page-scroll" href="#fileupload">File Upload</a>
+                            <a class="page-scroll" href="#fileupload">Select szenario</a>
                         </li>
                         <li>
                             <a class="page-scroll" href="#visualization">Visualization</a>
                         </li>
+                        <li>
+                            <a class="page-scroll" href="#settings">Settings</a>
+                        </li>                       
                         <li>
                             <a class="page-scroll" href="#contact"><i class="fa fa-envelope"></i></a>
                         </li>
@@ -106,16 +109,17 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-6 col-md-offset-3">
-                            <h1>Szenario</h1>
-
-                            <div id = "createwatch" class="btn-group" data-toggle="buttons">
+                            <h1>Select szenario</h1>
+                            </br>
+                            </br>
+                            <!--div id = "createwatch" class="btn-group" data-toggle="buttons">
                                 <label class="btn btn-default active">
                                     <input type="radio" value="create"> Create
                                 </label> 
                                 <label class="btn btn-default">
                                     <input type="radio" value="watch"> Watch
                                 </label> 
-                            </div>
+                            </div-->
                             </br></br>
                             <form id = "watch">
                                 <div class="row">
@@ -130,7 +134,7 @@
                                     <h4>Szenarioname: </h4>
                                     <select id="szenarioname" class="selectpicker" data-selected-text-format="count">
                                         <option value="2015-05-10T09:00_szenarioname1" selected>2015-05-10T09:00_szenarioname1</option>
-                                        <option value="555235b923d4ba8413b986c4" selected>2015-05-10T09:00_szenarioname2</option>
+                                        <option value="55565ebe2193674400111873" selected>2015-05-10T09:00_szenarioname2</option>
                                     </select>
                                     </br>
                                 </div>
@@ -142,7 +146,7 @@
                                     </a>
                                 </div>
                             </form>
-                            <form id = "create">
+                            <!--form id = "create">
                                 <div class="row">
                                     <h4>Groupname: </h4>
                                     <select id="groupname" class="selectpicker" data-selected-text-format="count">
@@ -164,7 +168,7 @@
                                         <option value="test2.json" selected>test2.json</option>
                                     </select>
                                 </div>
-                                </br>
+                                </br-->
 
                                 <!-- Button trigger modal -->
                                 <!--button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
@@ -191,7 +195,7 @@
                                     </div>
                                 </div-->
 
-                                <div class="row">
+                                <!--div class="row">
                                     <h4>3D-Model in X3D (optional): </h4>
                                     <select id="floorplanjsonname" class="selectpicker" data-selected-text-format="count">
                                         <option value="test1.x3d" selected>test1.x3d</option>
@@ -204,7 +208,7 @@
 
                                     </a>
                                 </div>
-                            </form>
+                            </form-->
 
                             <!--form id = "uploadForm">
                                 <h4>Floorplan in JSON: </h4><input id="floorplanjson" name="floorplanjson" type="file" data-show-preview="false">
@@ -236,13 +240,17 @@
             </script>
             <x3d>
                 <scene>
-                    <!--viewpoint position="-1.94639 1.79771 -2.89271" orientation="0.03886 0.99185 0.12133 3.75685"></viewpoint>
+<!--                    <viewpoint position="-1.94639 1.79771 -2.89271" orientation="0.03886 0.99185 0.12133 3.75685"></viewpoint>
                     <Inline nameSpaceName="Deer" mapDEFToID="true"
-                            onclick='redNose();' url="Deer.x3d" /-->
+                            onclick='redNose();' url="Deer.x3d" />-->
                 </scene>
             </x3d>
         </section>	
-
+        <!-- actualdata Section -->
+        <section id="settings" class="container content-section text-center">
+            <h1>Settings</h1>
+            
+        </section>
 
         <!-- Contact Section -->
         <footer id="contact" class="text-center">
@@ -282,7 +290,7 @@
 
         <!-- express.io -->
         <!--script src="/socket.io/socket.io.js"></script-->
-        <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
         <script src="js/specificvisualization.js"></script>
 
     </body>

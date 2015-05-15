@@ -43,7 +43,7 @@ io.on('connection', function(socket){
 
 
 // Mongoose connection to MongoDB (ted/ted is readonly)
-mongoose.connect('mongodb://localhost/testuser', function(error) {
+mongoose.connect('mongodb://localhost/testTestForErrors', function(error) {
     if (error) {
         console.log(error);
     }
@@ -82,6 +82,7 @@ function yyyymmddHHMMSS(d) {
 
 //Received data from roboter
 app.post('/initSzenario', function(req, res) {
+    var msg;
     //log
     console.log("received POST /initSzenario : ");
     console.log(req.body);
@@ -94,81 +95,148 @@ app.post('/initSzenario', function(req, res) {
     //save in mongodb
     Group.findOne({'groupname': req.body.groupname}, function(err, gr) {
         if (err){
-            console.log('cant find group with name:'+req.body.groupname);
             console.error(err);
-        }
-        if (!err){
-            console.log(gr);
-			szObject._group_id = gr._id;
+            msg = {error : err};
+        }else if(gr == null){
+            console.log('cant find group with name:'+req.body.groupname);
+            msg = {error:'cant find group with name:'+req.body.groupname};
+        }else{
+            szObject._group_id = gr._id;
             var sz = new Szenario(szObject);
             sz.save(function(err, sz) {
-               console.log("saved: " + sz);
-               if (err)
-                   return console.error(err);
-            });
-            gr._szenario_ids.push(sz._id);
-			console.log(gr);
-            gr.save(function(err, gr) {
-               console.log("saved: " + gr);
-               if (err)
-                   return console.error(err);
+                if (err){
+                    console.error(err);
+                    msg ={error:'cant save szenario', information: err};
+                }else {
+                    console.log("saved: " + sz);
+                    gr._szenario_ids.push(sz._id);
+                    console.log(gr);
+                    gr.save(function(err, gr) {
+                       if (err){
+                           console.error(err);
+                           msg ={error:'cant save group', information: err};
+                       }else{
+                           console.log("saved: " + gr);
+                       }
+                    });
+                }
             });
         }
     });
-    res.json(req.body);
+    //this is not working for errors
+    if(msg == null){
+        msg = { success : 'group and szenario saved' };
+    }
+    console.log(msg);
+    res.json(msg);
 });
 
 //Received data from roboter
 app.post('/actualPosition', function(req, res) {
+    var msg;
     //log
     console.log("received POST /actualPosition : ");
     console.log(req.body);
     var actualPositionObject = req.body;
     actualPositionObject.timestamp = new Date();
+    
     //save in mongodb
-        Group.find({groupname:req.groupname}, function(err, gr) {
-        //get last szenario of this group
-		Szenario.findOne({groupid:gr._id}, {}, { sort: {'timestamp': 'desc'}}, function(err, lastszenario) {
-			console.log(lastszenario._id);
-                        actualPositionObject._szenario_id = lastszenario._id;
-                            var ap = new ActualPosition(actualPositionObject);
-                            ap.save(function(err, ap) {
-                                console.log("saved: " + ap);
-                                if (err)
-                                    return console.error(err);
-                                //broadcast to clients, send when saved (saving validates)
-                                io.to(lastszenario._id).emit('actualPosition', ap);
-                            });
-		});
+    Group.find({groupname:req.body.groupname}, function(err, gr) {
+        if(err){
+            console.error(err);
+            msg = {error : err};
+        }else if (gr == null){
+            console.log('cant find group with name:'+req.body.groupname);
+            msg = {error:'cant find group with name:'+req.body.groupname};
+        }else{
+            
+            //get last szenario of this group
+            Szenario.findOne({groupid:gr._id}, {}, { sort: {timestamp: 'desc'}}, function(err, lastszenario) {
+                console.log(lastszenario);
+                if(err){
+                    console.error(err);
+                    msg = {error : err};
+                }else if (lastszenario == null){
+                    console.log('cant find szenario of group:'+req.body.groupname);
+                    msg = {error:'cant find szenario of group:'+req.body.groupname};
+                }else{
+                    console.log(lastszenario._id);
+                    actualPositionObject._szenario_id = lastszenario._id;
+                    var ap = new ActualPosition(actualPositionObject);
+                    
+                    ap.save(function(err, ap) {
+                        if (err){
+                            console.error(err);
+                        }else{
+                            console.log("saved: " + ap);
+                            //broadcast to clients, send when saved (saving validates)
+                            io.to(lastszenario._id).emit('actualPositionArray', [ap]);
+                        }
+                    });
+                }
+            });
+        }
     });
-    res.json(req.body);
+    //this is not working for errors
+    if(msg === 'undefined'){
+        msg = { success : 'group and szenario saved' };
+    }
+    console.log(msg);
+    res.json(msg);
 });
 
 //Received data from roboter
 app.post('/newPath', function(req, res) {
+    var msg;
     //log
     console.log("received POST /newPath : ");
     console.log(req.body);
     //save in mongodb
     var newPathObject = req.body;
     newPathObject.timestamp = new Date();
+    
     //get group
-    Group.find({groupname:req.groupname}, function(err, gr) {
-        //get last szenario of this group
-		Szenario.findOne({groupid:gr._id}, {}, { sort: {'timestamp': 'desc'}}, function(err, lastszenario) {
-			console.log(lastszenario._id);
-                        newPathObject._szenario_id = lastszenario._id;
-                            var np = new NewPath(newPathObject);
-                            np.save(function(err, np) {
-                                console.log("saved: " + np);
-                                if (err)
-                                    return console.error(err);
-                                //broadcast to clients, send when saved (saving validates)
-                                io.to(lastszenario._id).emit('newPath', np);
-                            });
-		});
+    Group.find({groupname:req.body.groupname}, function(err, gr) {
+        if(err){
+            console.error(err);
+            msg = {error : err};
+        }else if (gr == null){
+            console.log('cant find group with name:'+req.body.groupname);
+            msg = {error:'cant find group with name:'+req.body.groupname};
+        }else{
+            
+            //get last szenario of this group
+            Szenario.findOne({groupid:gr._id}, {}, { sort: {timestamp: 'desc'}}, function(err, lastszenario) {
+                if(err){
+                    console.error(err);
+                    msg = {error : err};
+                }else if (lastszenario == null){
+                    console.log('cant find szenario of group:'+req.body.groupname);
+                    msg = {error:'cant find szenario of group:'+req.body.groupname};
+                }else{
+                    console.log(lastszenario._id);
+                    newPathObject._szenario_id = lastszenario._id;
+                    var np = new NewPath(newPathObject);
+                    
+                    np.save(function(err, np) {
+                        if (err){
+                            console.error(err);
+                        }else{
+                            console.log("saved: " + np);
+                            //broadcast to clients, send when saved (saving validates)
+                            io.to(lastszenario._id).emit('newPathArray', [np]);
+                        }
+                    });
+                }
+            });
+        }
     });
-    res.json(req.body);
+    //this is not working for errors
+    if(msg === 'undefined'){
+        msg = { success : 'group and szenario saved' };
+    }
+    console.log(msg);
+    res.json(msg);
 });
 
 
@@ -202,6 +270,18 @@ function sendExistingDataForSzenario(szenarioID, userID) {
 
 
 //TESTING AND READING DB
+
+// URLS management
+app.get('/init', function(req, res) {
+    var json={};
+    Group.find({}, function(err, docs) {
+        json.groups = docs;
+        Szenario.find({}, function(err, docs) {
+            json.szenarios = docs;
+            res.json(json);
+        });
+    });
+});
 
 // URLS management
 app.get('/Groups', function(req, res) {

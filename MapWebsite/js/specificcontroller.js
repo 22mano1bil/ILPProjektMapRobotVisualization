@@ -1,4 +1,51 @@
-//$("#floorplanjson").fileinput({
+$(document).ready(function() {
+    $.ajax({
+        type: 'GET',
+        url: '/init',
+        dataType: 'json',
+        success: function(json) {
+            console.log(json);
+            initGroupAndFloors(json);
+        }
+    });
+});
+
+var initJSON;
+function initGroupAndFloors(json){
+    initJSON = json;
+    updateGroups();
+}
+function updateGroups(){
+    if(initJSON['groups'] != null){
+        var groups = $('#groupname');
+        groups.find('option').remove();
+        $.each(initJSON['groups'], function(i, v) {
+            groups.append("<option value=" + v['_id'] + ">" + v['groupname'] + "</option>");
+           
+        });
+        groups.selectpicker('refresh');
+        
+        updateSzenarios();
+    }  
+}
+$('#groupname').on('change', function(){
+    updateSzenarios();
+});
+function updateSzenarios(){
+    if(initJSON['szenarios'] != null){
+        var groupid = $('#groupname').find('option:selected').val();
+        var szenarios = $('#szenarioname');
+        szenarios.find('option').remove();
+        $.each(initJSON['szenarios'], function(i, v) {
+            if (v['_group_id'] == groupid){
+                szenarios.append("<option value=" + v['_id'] + ">" + v['szenarioname'] + "</option>");
+            }
+        });
+        szenarios.selectpicker('refresh');
+    }
+}
+
+////$("#floorplanjson").fileinput({
 //    allowedFileExtensions: ["json"],
 //    showUpload: false
 //});

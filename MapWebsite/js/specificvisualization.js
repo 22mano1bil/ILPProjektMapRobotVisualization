@@ -1,25 +1,52 @@
-var io = io();
-
-$('#watchSzenarioSubmit').click(function () {
-    var szenarioID = $('#szenarioname option:selected').val();
-    console.log(szenarioID);
-    io.emit('switchSzenario', szenarioID);
-});
-
-// Listen for the actualPosition event.
-io.on('szenario', function (data) {
-    console.log('szenario');
-    console.log(data);
-    buildNewSzenario(data);
-});
+var x3dscene = $('X3D scene');
+var x3dscenetransform = $('X3D scene > transform > group ');
+var xArray = [];
+var yArray = [];
 
 function buildNewSzenario(data) {
-    $('X3D scene').empty();
-    $('X3D scene').append(addx3dModel(data));
-    $('X3D scene').append(addFloorplan(data));
-    $('X3D scene').append(x3dExample());
+    x3dscenetransform.empty();
+    addFloorplan(data);
+    
+    x3dscenetransform.append(addx3dModel(data));
+    x3dscenetransform.append(x3dExample());
 }
-$('X3D scene').append(addFloorplan());
+
+function setInTheMiddle(){
+    var x = (Math.max.apply(Math,xArray)+Math.min.apply(Math,xArray))/2;
+    var y = (Math.max.apply(Math,yArray) + Math.min.apply(Math,yArray))/2;
+    var middleOfFloorplan = "-"+x+" -"+y+" 0";
+    console.log(xArray);
+    console.log(yArray);
+    console.log(Math.min(xArray));
+    console.log("translation"+middleOfFloorplan);
+//    document.getElementById(evt.target.coordinateSystId).setAttribute('translation', middleOfFloorplan); 
+    $('X3D scene > transform').attr('translation', middleOfFloorplan );
+//    document.getElementById('CoordinateAxes__CoordinateAxes').setAttribute('position', middleOfFloorplan);
+}
+
+function buildActualPosition(data) {
+    $.each(data, function(i, v) {
+        console.log(v);
+        var actualPosition = v['actualPosition'];
+        x3dscenetransform.append(zylinderWithMiddlePoint(actualPosition['point']));
+    }); 
+}
+
+function buildNewPath(data) {
+    $.each(data, function(i, v) {
+        console.log(v);
+        var newPath = v['newPath'];
+        x3dscenetransform.append(sphereWithPoint(newPath[0]));
+        if(newPath.length>1){
+            for (i = 0; i < newPath.length-1; i++) { 
+                //console.log(newPath[i]);
+                x3dscenetransform.append(zylinderWithStartpointAndEndpoint(newPath[i],newPath[i+1]));
+                x3dscenetransform.append(sphereWithPoint(newPath[i+1]));
+            }
+        }
+    });  
+}
+
 
 //auf json zugreifen
 function addFloorplan() {
@@ -31,7 +58,17 @@ function addFloorplan() {
        $.each(data['features'], function(i, v) {
            if(v['properties']['value']=='limit')
                console.log('limit');
+           var polygon = v['geometry']['coordinates'][0];
+           if(polygon.length>1){
+                for (i = 0; i < polygon.length-1; i++) { 
+                    console.log(polygon[i]);
+                    xArray.push(polygon[i][0]);
+                    yArray.push(polygon[i][1]);
+                    x3dscenetransform.append(boxWithStartpointAndEndpoint(polygon[i],polygon[i+1]));
+                }
+            }
        });
+       setInTheMiddle();
     });
 }
 function addx3dModel(data) {
@@ -57,7 +94,6 @@ function sphereWithPoint(p) {
             "</Shape>" +
             "</Transform>";
     console.log(sphereString);
-    $('X3D scene').append(sphereString);
     return sphereString;
 };
 
@@ -128,7 +164,75 @@ function zylinderWithMiddlePoint(mp) {
             "</Transform>" +
             "</Transform>";
     console.log(zylinderString);
-    $('X3D scene').append(zylinderString);
+    return zylinderString;
+};
+function boxWithStartpointAndEndpoint(p1, p2) {
+//Berechnung der Attribute des Bindungszylinders
+    var point1 = {};
+    point1.x = p1[0];
+    point1.y = p1[1];
+    point1.z = 0;
+
+    var point2 = {};
+    point2.x = p2[0];
+    point2.y = p2[1];
+    point2.z = 0;
+
+// Vektor zwischen den Atomen
+    var vector = {};
+    vector.x = (point2.x - point1.x);
+    vector.y = (point2.y - point1.y);
+    vector.z = (point2.z - point1.z);
+    
+    var length = Math.sqrt(vector.x*vector.x + vector.y * vector.y + vector.z * vector.z);
+    console.log(length);
+    
+// halbierter Vektor zwischen den Atomen
+    var middle = {};
+    middle.x = vector.x / 2;
+    middle.y = vector.y / 2;
+    middle.z = vector.z / 2;
+
+// Mittelpunkt zwischen den beiden Punkten
+    var position = (point1.x + middle.x) + " "
+            + (point1.y + middle.y) + " " + (point1.z + middle.z);
+
+// Winkel zwischen middle und Y-Achse
+    var help = middle.x * middle.x + middle.y * middle.y
+            + middle.z * middle.z;
+    var angle = Math.acos(middle.y / Math.sqrt(help));
+
+// Bestimmung der Rotationsachse
+    var rotation;
+    if (middle.x == 0) {
+        rotation = "1 0 0 ";
+        // falls notwendig "richtig" herum drehen
+        if (middle.z < 0)
+            angle = (2 * Math.PI) - angle;
+    }
+    else {
+        rotation = -middle.z / middle.x + " 0 1 ";
+        // falls notwendig "richtig" herum drehen
+        if (middle.x > 0)
+            angle = (2 * Math.PI) - angle;
+    }
+// Angabe einer Rotation in X3D:
+// 3 Koordinaten der Rotationsachse + Winkel
+    rotation = rotation + angle;
+
+
+    var zylinderString = 
+            "<Transform translation='" + position + "'>" + //z is always null/static
+            "<Transform rotation='" + rotation + "'>" +
+            "<Shape>" +
+            "<Box size=' 0.01 "+length+" 0.3' />" + //radius and heigt is static
+            "<Appearance>" +
+            "<Material diffuseColor='0.5 0.5 0.5' />" + //color is static
+            "</Appearance>" +
+            "</Shape>" +
+            "</Transform>" +
+            "</Transform>";
+    console.log(zylinderString);
     return zylinderString;
 };
 
@@ -199,7 +303,6 @@ function zylinderWithStartpointAndEndpoint(p1, p2) {
             "</Transform>" +
             "</Transform>";
     console.log(zylinderString);
-    $('X3D scene').append(zylinderString);
     return zylinderString;
 };
 
@@ -323,44 +426,3 @@ function x3dExample() {
     return string;
 };
 
-
-// Listen for the actualPosition event.
-io.on('actualPosition', function (data) {
-    console.log('actualPosition');
-    console.log(data);
-})
-
-// Listen for the actualPosition event.
-io.on('actualPositionArray', function (data) {
-    console.log('actualPosition');
-    console.log(data);
-    $.each(data, function(i, v) {
-        console.log(v);
-        var actualPosition = v['actualPosition'];
-        zylinderWithMiddlePoint(actualPosition['point']);
-    });  
-})
-
-// Listen for the newPath event.
-io.on('newPath', function (data) {
-    console.log('newPath');
-    console.log(data);
-})
-
-// Listen for the newPath event.
-io.on('newPathArray', function (data) {
-    console.log('newPathArray');
-    console.log(data);
-    $.each(data, function(i, v) {
-        console.log(v);
-        var newPath = v['newPath'];
-        sphereWithPoint(newPath[0]);
-        if(newPath.length>1){
-            for (i = 0; i < newPath.length-1; i++) { 
-                //console.log(newPath[i]);
-                zylinderWithStartpointAndEndpoint(newPath[i],newPath[i+1]);
-                sphereWithPoint(newPath[i+1]);
-            }
-        }
-    });  
-});

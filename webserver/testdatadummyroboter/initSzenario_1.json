@@ -1,7 +1,7 @@
 {
-    "groupname": "12",
+    "groupname": "dummyroboter",
     "szenario": {
-        "szenarioname": "ersteVersuche3",
+        "szenarioname": "DR_",
         "floorplanJSONref": "floorplan_test1.json",
         "modelX3Dref": "Deer.x3d"
     }

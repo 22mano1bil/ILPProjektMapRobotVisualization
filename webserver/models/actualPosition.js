@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 // Mongoose Schema definition
 var ActualPositionSchema = mongoose.Schema({
-    robotergroupname: {type: String, required: true},
+    groupname: {type: String, required: true},
     _szenario_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Szenario',

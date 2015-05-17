@@ -1,9 +1,9 @@
 {
-    "groupname":"12",
+    "groupname":"dummyroboter",
     "actualPosition": {
         "point": {
-            "x": 2,
-            "y": 2
+            "x": 18.28125,
+            "y": 25.997549919572112
         },
         "orientation": {
             "x": 1,

@@ -4,7 +4,10 @@ var xArray = [];
 var yArray = [];
 
 function buildNewSzenario(data) {
+    console.log(data);
+    var ap = x3dscenetransform.find('transform[DEF="ActualPosition"]');
     x3dscenetransform.empty();
+    x3dscenetransform.append(ap);
     addFloorplan(data);
     
     x3dscenetransform.append(addx3dModel(data));
@@ -49,8 +52,8 @@ function buildNewPath(data) {
 
 
 //auf json zugreifen
-function addFloorplan() {
-  var flickerAPI = "uploads/floorplan_test1.json";
+function addFloorplan(data) {
+  var flickerAPI = "uploads/floorplanJSON/"+data.floorplanJSONref;
   $.getJSON( flickerAPI)
     .done(function( data ) {
 //       console.log(data);
@@ -73,7 +76,9 @@ function addFloorplan() {
 }
 function addx3dModel(data) {
 //    return "<inline url="+data['modelX3DREF']+"></inline>";
-    return "<inline url=Deer.x3d></inline>";
+    if(data.floorplanJSONref !== 'undefiend'){
+    return '<inline url=uploads/modelX3D/'+data.modelX3Dref+'></inline>';
+    }else return "";
 }
 
 function sphereWithPoint(p) {
@@ -96,8 +101,79 @@ function sphereWithPoint(p) {
     console.log(sphereString);
     return sphereString;
 };
-
 function zylinderWithMiddlePoint(mp) {
+//Berechnung der Attribute des Bindungszylinders
+    var point1 = {};
+    point1.x = mp.x;
+    point1.y = mp.y;
+    point1.z = 0;
+
+    var point2 = {};
+    point2.x = mp.x;
+    point2.y = mp.y;
+    point2.z = 0.21;
+
+// Vektor zwischen den Atomen
+    var vector = {};
+    vector.x = (point2.x - point1.x);
+    vector.y = (point2.y - point1.y);
+    vector.z = (point2.z - point1.z);
+    
+    var length = Math.sqrt(vector.x*vector.x + vector.y * vector.y + vector.z * vector.z);
+    console.log(length);
+    
+// halbierter Vektor zwischen den Atomen
+    var middle = {};
+    middle.x = vector.x / 2;
+    middle.y = vector.y / 2;
+    middle.z = vector.z / 2;
+
+// Mittelpunkt zwischen den beiden Punkten
+    var position = (point1.x + middle.x) + " "
+            + (point1.y + middle.y) + " " + (point1.z + middle.z);
+
+// Winkel zwischen middle und Y-Achse
+    var help = middle.x * middle.x + middle.y * middle.y
+            + middle.z * middle.z;
+    var angle = Math.acos(middle.y / Math.sqrt(help));
+
+// Bestimmung der Rotationsachse
+    var rotation;
+    if (middle.x == 0) {
+        rotation = "1 0 0 ";
+        // falls notwendig "richtig" herum drehen
+        if (middle.z < 0)
+            angle = (2 * Math.PI) - angle;
+    }
+    else {
+        rotation = -middle.z / middle.x + " 0 1 ";
+        // falls notwendig "richtig" herum drehen
+        if (middle.x > 0)
+            angle = (2 * Math.PI) - angle;
+    }
+// Angabe einer Rotation in X3D:
+// 3 Koordinaten der Rotationsachse + Winkel
+    rotation = rotation + angle;
+
+    var ap = x3dscenetransform.find('transform[DEF="ActualPosition"]');
+    ap.attr('translation', position);
+    ap.find('transform').attr('rotation', rotation);
+
+//    var zylinderString = 
+//            "<Transform translation='" + position + "'>" + //z is always null/static
+//            "<Transform rotation='" + rotation + "'>" +
+//            "<Shape>" +
+//            "<Cylinder height='"+length+"' radius='0.4' />" + //radius and heigt is static
+//            "<Appearance>" +
+//            "<Material diffuseColor='0.5 0.5 1' />" + //color is static
+//            "</Appearance>" +
+//            "</Shape>" +
+//            "</Transform>" +
+//            "</Transform>";
+//    console.log(zylinderString);
+//    return zylinderString;
+};
+function zylinderWithMiddlePointOLD(mp) {
 //Berechnung der Attribute des Bindungszylinders
     var point1 = {};
     point1.x = mp.x;

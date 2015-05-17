@@ -11,12 +11,6 @@ client.post('/actualPosition', actualPosition, function(err, res, body) {
   console.log(res.body);
 });
 
-//var firstPath = require("./testdatadummyroboter/firstPath.json");
-//client.post('/firstPath', firstPath, function(err, res, body) {
-//  console.log(res.statusCode);
-//  console.log(res.body);
-//});
-
 var newPath = require("./testdatadummyroboter/newPath.json");
 client.post('/newPath', newPath, function(err, res, body) {
   console.log(res.statusCode);

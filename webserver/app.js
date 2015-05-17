@@ -43,7 +43,7 @@ io.on('connection', function(socket){
 
 
 // Mongoose connection to MongoDB (ted/ted is readonly)
-mongoose.connect('mongodb://localhost/testTestForErrors', function(error) {
+mongoose.connect('mongodb://localhost/testTestForErrors2', function(error) {
     if (error) {
         console.log(error);
     }
@@ -141,7 +141,7 @@ app.post('/actualPosition', function(req, res) {
     actualPositionObject.timestamp = new Date();
     
     //save in mongodb
-    Group.find({groupname:req.body.groupname}, function(err, gr) {
+    Group.findOne({groupname:req.body.groupname}, function(err, gr) {
         if(err){
             console.error(err);
             msg = {error : err};
@@ -149,9 +149,8 @@ app.post('/actualPosition', function(req, res) {
             console.log('cant find group with name:'+req.body.groupname);
             msg = {error:'cant find group with name:'+req.body.groupname};
         }else{
-            
             //get last szenario of this group
-            Szenario.findOne({groupid:gr._id}, {}, { sort: {timestamp: 'desc'}}, function(err, lastszenario) {
+            Szenario.findOne({_group_id:gr._id}, {}, { sort: {timestamp: 'desc'}}, function(err, lastszenario) {
                 console.log(lastszenario);
                 if(err){
                     console.error(err);
@@ -196,7 +195,7 @@ app.post('/newPath', function(req, res) {
     newPathObject.timestamp = new Date();
     
     //get group
-    Group.find({groupname:req.body.groupname}, function(err, gr) {
+    Group.findOne({groupname:req.body.groupname}, function(err, gr) {
         if(err){
             console.error(err);
             msg = {error : err};
@@ -206,7 +205,7 @@ app.post('/newPath', function(req, res) {
         }else{
             
             //get last szenario of this group
-            Szenario.findOne({groupid:gr._id}, {}, { sort: {timestamp: 'desc'}}, function(err, lastszenario) {
+            Szenario.findOne({_group_id:gr._id}, {}, { sort: {timestamp: 'desc'}}, function(err, lastszenario) {
                 if(err){
                     console.error(err);
                     msg = {error : err};
@@ -299,9 +298,10 @@ app.get('/Szenarios', function(req, res) {
 
 // URLS management
 //get last szenario of group
-app.get('/Sz123/:groupname', function(req, res) {
-    Group.find({groupname:req.params.groupname}, function(err, gr) {
-		Szenario.findOne({groupid:gr._id}, {}, { sort: {'timestamp': 'desc'}}, function(err, lastszenario) {
+app.get('/Szenario/:groupname', function(req, res) {
+    console.log(req.params.groupname);
+    Group.findOne({groupname:req.params.groupname}, function(err, gr) {
+		Szenario.findOne({_group_id:gr._id}, {}, { sort: {timestamp: 'desc'}}, function(err, lastszenario) {
 			console.log(lastszenario._id);
 			res.json(lastszenario);
 		});

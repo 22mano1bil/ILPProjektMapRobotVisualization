@@ -10,7 +10,7 @@ $('#watchSzenarioSubmit').click(function () {
 io.on('szenario', function (data) {
     console.log('szenario');
     console.log(data);
-    buildNewSzenario(data);
+    buildNewSzenario(data[0]);
 });
 
 // Listen for the actualPosition event.

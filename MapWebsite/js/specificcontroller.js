@@ -8,8 +8,34 @@ $(document).ready(function() {
             initGroupAndFloors(json);
         }
     });
+        $.ajax({
+        type: 'GET',
+        url: '/initFiles',
+        dataType: 'json',
+        success: function(json) {
+            console.log(json);
+            initFiles(json);
+        }
+    });
 });
-
+function initFiles(json){
+    if(json['floorplanJSON'] != null){
+        var floorplanJSONselect = $('#downloadFloorplanJSONSelect');
+        floorplanJSONselect.find('option').remove();
+        $.each(json['floorplanJSON'], function(i, v) {
+            floorplanJSONselect.append("<option value=" + v + ">" + v + "</option>");
+        });
+        floorplanJSONselect.selectpicker('refresh');
+    }  
+    if(json['modelX3D'] != null){
+        var floorplanJSONselect = $('#downloadModelX3DSelect');
+        floorplanJSONselect.find('option').remove();
+        $.each(json['modelX3D'], function(i, v) {
+            floorplanJSONselect.append("<option value=" + v + ">" + v + "</option>");
+        });
+        floorplanJSONselect.selectpicker('refresh');
+    }     
+}
 var initJSON;
 function initGroupAndFloors(json){
     initJSON = json;

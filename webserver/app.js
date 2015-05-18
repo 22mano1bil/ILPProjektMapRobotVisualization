@@ -5,6 +5,7 @@ var httpserver  = require('http').createServer(app);
 var io      = require('socket.io').listen(httpserver);
 //path
 var path = require('path');
+var fs = require('fs');
 // parse application/json
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
@@ -370,4 +371,13 @@ app.post('/uploadFloorplanJSON', multerForFloorplanJSON, function (req, res) {
   console.log(req.body); // form fields
   console.log(req.files); // form files
   res.status(200).end();
+});
+
+// URLS management CALLED IN FRONTEND
+app.get('/initFiles', function(req, res) {
+    var json = {};
+    console.log(fs.readdirSync(path.resolve(__dirname + '/../MapWebsite/uploads/floorplanJSON')));
+    json.floorplanJSON = fs.readdirSync(path.resolve(__dirname + '/../MapWebsite/uploads/floorplanJSON'));
+    json.modelX3D = fs.readdirSync(path.resolve(__dirname + '/../MapWebsite/uploads/modelX3D'));
+    res.json(json);
 });

@@ -254,12 +254,12 @@ function sendExistingDataForSzenario(szenarioID, userID) {
         console.log(newPathArray);
         io.to(userID).emit('newPathArray', newPathArray);
     });    
-    ActualPosition.find({_szenario_id:szenarioID}, {}, { sort: {'timestamp': 'desc'}}, function(err, actualPositionArray) {
+    ActualPosition.findOne({_szenario_id:szenarioID}, {}, { sort: {'timestamp': 'desc'}}, function(err, actualPositionArray) {
         if (err)
             return console.error(err);
         console.log('actualPositionArray');
         console.log(actualPositionArray);
-        io.to(userID).emit('actualPositionArray', actualPositionArray);
+        io.to(userID).emit('actualPositionArray', [actualPositionArray]);
     }); 
 }
 
@@ -310,6 +310,11 @@ app.get('/Szenario/:groupname', function(req, res) {
 
 // URLS management
 app.get('/actualPositions', function(req, res) {
+    ActualPosition.findOne({}, {}, { sort: {'timestamp': 'desc'}}, function(err, docs) {
+        res.json(docs);
+    });
+});
+app.get('/lastPosition', function(req, res) {
     ActualPosition.find({}, function(err, docs) {
         res.json(docs);
     });

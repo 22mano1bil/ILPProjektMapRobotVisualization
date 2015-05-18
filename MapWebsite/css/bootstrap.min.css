@@ -5102,6 +5102,7 @@ a.thumbnail:hover {
     }
 }
 .progress {
+    display:none;
     height: 20px;
     margin-bottom: 20px;
     overflow: hidden;

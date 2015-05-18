@@ -255,14 +255,24 @@
         <section id="settings" class="container content-section text-center">
             <h1>Settings</h1>
             <form id = "uploadForm">
-                <h4>Floorplan in JSON: </h4><input id="floorplanjson" name="floorplanjson" type="file" data-show-preview="false">
+                <h4>Upload Floorplan in JSON: </h4><input id="floorplanjson" name="floorplanjson" type="file" data-show-preview="false">
                 </br>
-                <h4>3D-Model in X3D (optional): </h4><input id="x3dmodel" name="x3dmodel" type="file" data-show-preview="false">
-                </br></br>
-                <button id="submitFiles"  class="btn btn-circle">
-                    <a href="#visualization" class="page-scroll">
-                        <i class="fa fa-angle-double-down animated"></i>
-                    </a>
+                <h4>Upload 3D-Model in X3D: </h4><input id="x3dmodel" name="x3dmodel" type="file" data-show-preview="false">
+                </br>
+                <h4>Download Floorplan in JSON: </h4>
+                <select id="downloadFloorplanJSONSelect" class="selectpicker" data-selected-text-format="count">
+                                        <option value="Deer.x3d" selected>Deer.x3d</option>
+                                    </select>
+                <button id="downloadFloorplanJSON"  class="btn btn-primary">
+                    Download
+                </button>
+                </br>
+                <h4>Download 3D-Model in X3D: </h4>
+                <select id="downloadModelX3DSelect" class="selectpicker" data-selected-text-format="count">
+                                        <option value="Deer.x3d" selected>Deer.x3d</option>
+                </select>
+                <button id="downloadModelX3D"  class="btn btn-primary">
+                    Download
                 </button>
             </form>
         </section>
@@ -296,6 +306,9 @@
 
         <!-- Bootstrap JS file input -->
         <script src="js/fileinput.min.js"></script>
+        
+        <!-- Bootstrap JS file download -->
+        <script src="js/fileDownload.js"></script>
 
         <!-- visualization with x3d -->
         <script type='text/javascript' src='js/x3dom.js'></script>

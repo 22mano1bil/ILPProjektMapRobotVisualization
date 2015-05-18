@@ -331,7 +331,7 @@ app.get('/NewPaths', function(req, res) {
 
 var multerForModelX3D = multer(
   {
-    dest: 'uploads/modelX3D',
+    dest: path.resolve(__dirname + '/../MapWebsite/uploads/modelX3D'),
     rename: function (fieldname, filename) {
       return filename;
     },
@@ -353,7 +353,7 @@ app.post('/uploadModelX3D', multerForModelX3D, function (req, res) {
 
 var multerForFloorplanJSON = multer(
   {
-    dest: 'uploads/modelX3D',
+    dest: path.resolve(__dirname + '/../MapWebsite/uploads/floorplanJSON'),
     rename: function (fieldname, filename) {
       return filename;
     },

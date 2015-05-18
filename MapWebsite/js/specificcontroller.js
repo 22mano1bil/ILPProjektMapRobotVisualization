@@ -57,3 +57,15 @@ $("#x3dmodel").fileinput({
     uploadAsync: true,
     maxFileCount: 1
 });
+
+$('#downloadModelX3D').click(function () {
+    var modelX3D = $('#downloadModelX3DSelect').find('option:selected').val();
+    console.log(modelX3D);
+    $.fileDownload('uploads/modelX3D/'+modelX3D);
+});
+
+$('#downloadFloorplanJSON').click(function () {
+    var floorplanJSON = $('#downloadFloorplanJSONSelect').find('option:selected').val();
+    console.log(floorplanJSON);
+    $.fileDownload('uploads/modelX3D/'+floorplanJSON);
+});

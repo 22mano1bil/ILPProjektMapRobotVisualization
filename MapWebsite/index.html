@@ -25,7 +25,7 @@
         <!-- Custom Fonts -->
         <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         <link href="font-awesome/css/h1font.css" rel="stylesheet" type="text/css">
-        <!--link href="css/fileinput.min.css" rel="stylesheet" type="text/css"-->
+        <link href="css/fileinput.min.css" rel="stylesheet" type="text/css">
 
         <!-- visualization with x3d -->
         <link rel='stylesheet' type='text/css' href='css/x3dom.css'/>
@@ -254,7 +254,17 @@
         <!-- actualdata Section -->
         <section id="settings" class="container content-section text-center">
             <h1>Settings</h1>
-            
+            <form id = "uploadForm">
+                <h4>Floorplan in JSON: </h4><input id="floorplanjson" name="floorplanjson" type="file" data-show-preview="false">
+                </br>
+                <h4>3D-Model in X3D (optional): </h4><input id="x3dmodel" name="x3dmodel" type="file" data-show-preview="false">
+                </br></br>
+                <button id="submitFiles"  class="btn btn-circle">
+                    <a href="#visualization" class="page-scroll">
+                        <i class="fa fa-angle-double-down animated"></i>
+                    </a>
+                </button>
+            </form>
         </section>
 
         <!-- Contact Section -->
@@ -285,7 +295,7 @@
         <script src="js/bootstrap-select.js"></script>
 
         <!-- Bootstrap JS file input -->
-        <!--script src="js/fileinput.min.js"></script-->
+        <script src="js/fileinput.min.js"></script>
 
         <!-- visualization with x3d -->
         <script type='text/javascript' src='js/x3dom.js'></script>

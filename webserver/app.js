@@ -8,6 +8,8 @@ var path = require('path');
 // parse application/json
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
+//File Upload
+var multer = require('multer');
 // Mongoose import
 var mongoose = require('mongoose');
 var models = require('./models');
@@ -93,7 +95,7 @@ app.post('/initSzenario', function(req, res) {
     szObject.timestamp = new Date();
     console.log(szObject);
     //save in mongodb
-    Group.findOne({'groupname': req.body.groupname}, function(err, gr) {
+    Group.findOne({groupname: req.body.groupname}, function(err, gr) {
         if (err){
             console.error(err);
             msg = {error : err};
@@ -247,14 +249,14 @@ function sendExistingDataForSzenario(szenarioID, userID) {
         console.log(szenario);
         io.to(userID).emit('szenario', szenario);
     });
-    NewPath.find({_szenario_id:szenarioID}, {}, { sort: {'timestamp': 'desc'}}, function(err, newPathArray) {
+    NewPath.find({_szenario_id:szenarioID}, {}, { sort: {timestamp: 'desc'}}, function(err, newPathArray) {
         if (err)
             return console.error(err);
         console.log('newPathArray');
         console.log(newPathArray);
         io.to(userID).emit('newPathArray', newPathArray);
     });    
-    ActualPosition.findOne({_szenario_id:szenarioID}, {}, { sort: {'timestamp': 'desc'}}, function(err, actualPositionArray) {
+    ActualPosition.findOne({_szenario_id:szenarioID}, {}, { sort: {timestamp: 'desc'}}, function(err, actualPositionArray) {
         if (err)
             return console.error(err);
         console.log('actualPositionArray');
@@ -270,7 +272,7 @@ function sendExistingDataForSzenario(szenarioID, userID) {
 
 //TESTING AND READING DB
 
-// URLS management
+// URLS management CALLED IN FRONTEND
 app.get('/init', function(req, res) {
     var json={};
     Group.find({}, function(err, docs) {
@@ -327,4 +329,45 @@ app.get('/NewPaths', function(req, res) {
 });
 
 
+var multerForModelX3D = multer(
+  {
+    dest: 'uploads/modelX3D',
+    rename: function (fieldname, filename) {
+      return filename;
+    },
+    onFileUploadStart: function (file) {
+      console.log(file.originalname + ' is starting ...');
+    },
+    onFileUploadComplete: function (file) {
+      console.log(file.originalname + ' uploaded to  ' + file.path);
+    }
+  }
+);
 
+app.post('/uploadModelX3D', multerForModelX3D, function (req, res) {
+  console.log(req.body); // form fields
+  console.log(req.files); // form files
+  res.status(200).end();
+});
+
+
+var multerForFloorplanJSON = multer(
+  {
+    dest: 'uploads/modelX3D',
+    rename: function (fieldname, filename) {
+      return filename;
+    },
+    onFileUploadStart: function (file) {
+      console.log(file.originalname + ' is starting ...');
+    },
+    onFileUploadComplete: function (file) {
+      console.log(file.originalname + ' uploaded to  ' + file.path);
+    }
+  }
+);
+
+app.post('/uploadFloorplanJSON', multerForFloorplanJSON, function (req, res) {
+  console.log(req.body); // form fields
+  console.log(req.files); // form files
+  res.status(200).end();
+});

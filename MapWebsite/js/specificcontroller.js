@@ -73,13 +73,13 @@ function updateSzenarios(){
 
 $("#floorplanjson").fileinput({
     allowedFileExtensions: ["json"],
-    uploadUrl: "http://localhost:7088/uploadFloorplanJSON", // server upload action
+    uploadUrl: "/uploadFloorplanJSON", // server upload action
     uploadAsync: true,
     maxFileCount: 1
 });
 $("#x3dmodel").fileinput({
     allowedFileExtensions: ["x3d"],
-    uploadUrl: "http://localhost:7088/uploadModelX3D", // server upload action
+    uploadUrl: "/uploadModelX3D", // server upload action
     uploadAsync: true,
     maxFileCount: 1
 });
@@ -87,7 +87,7 @@ $("#x3dmodel").fileinput({
 $('#downloadModelX3D').click(function () {
     var modelX3D = $('#downloadModelX3DSelect').find('option:selected').val();
     console.log(modelX3D);
-    $.fileDownload('uploads/modelX3D/'+modelX3D);
+    $.fileDownload('uploads/floorplanJSON/'+modelX3D);
 });
 
 $('#downloadFloorplanJSON').click(function () {

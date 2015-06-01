@@ -92,9 +92,9 @@ function sphereWithPoint(p) {
     var sphereString = 
             "<Transform translation='"+pointString+"'>" +
             "<Shape>" +
-            "<Sphere radius='0.2'/>" +
+            "<Sphere radius='0.05'/>" +
             "<Appearance>" +
-            "<Material diffuseColor='0.1 0.7 0.3'/>" +
+            "<Material diffuseColor='0.851 0.961 1'/>" +
             "</Appearance>" +
             "</Shape>" +
             "</Transform>";
@@ -303,7 +303,7 @@ function boxWithStartpointAndEndpoint(p1, p2) {
             "<Shape>" +
             "<Box size=' 0.01 "+length+" 0.3' />" + //radius and heigt is static
             "<Appearance>" +
-            "<Material diffuseColor='0.5 0.5 0.5' />" + //color is static
+            "<ImageTexture  url='img/wood.jpg'><ImageTexture/>" + //color is static
             "</Appearance>" +
             "</Shape>" +
             "</Transform>" +
@@ -371,9 +371,9 @@ function zylinderWithStartpointAndEndpoint(p1, p2) {
             "<Transform translation='" + position + "'>" + //z is always null/static
             "<Transform rotation='" + rotation + "'>" +
             "<Shape>" +
-            "<Cylinder height='"+length+"' radius='0.1' />" + //radius and heigt is static
+            "<Cylinder height='"+length+"' radius='0.05' />" + //radius and heigt is static
             "<Appearance>" +
-            "<Material diffuseColor='0.5 0.5 0.5' />" + //color is static
+            "<Material diffuseColor='0.851 0.961 1' />" + //color is static
             "</Appearance>" +
             "</Shape>" +
             "</Transform>" +

@@ -1,0 +1,13 @@
+{
+    "szenarioname":"erstesSzenario",
+    "actualPosition": {
+        "point": {
+            "x": 23.291015625,
+            "y": 30.107117887092382
+        },
+        "orientation": {
+            "x": 1,
+            "y": 2
+        }
+    }
+}

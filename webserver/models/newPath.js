@@ -1,18 +1,14 @@
 var mongoose = require('mongoose');
+var pointSchema = require('./pointSchema');
 var NewPathSchema = mongoose.Schema({
-    groupname: {type: String, required: true},
+    szenarioname: {type: String, required: true},
+    newPath: [pointSchema],
     _szenario_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Szenario',
         required: true
     },
-    timestamp: {type: Date, required: true},
-    newPath: [
-        {
-            x: Number,
-            y: Number
-        }
-    ]
+    timestamp: {type: Date, required: true}
 });
 
 // Mongoose Model definition

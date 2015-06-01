@@ -1,5 +1,10 @@
 var io = io();
 
+// Listen for the actualPosition event.
+io.on('hello', function (data) {
+    alert(data['hello'])
+});
+
 $('#watchSzenarioSubmit').click(function () {
     var szenarioID = $('#szenarioname option:selected').val();
     console.log(szenarioID);

@@ -17,7 +17,7 @@ var models = require('./models');
 
 //default send website and make it listen on port
 app.use(express.static(path.resolve(__dirname + '/../MapWebsite')));
-var server = httpserver.listen(7088, 'localhost', function() {
+var server = httpserver.listen(7088, function() {
     var host = server.address().address;
     var port = server.address().port;
     console.log('Example app listening at http://%s:%s', host, port);
@@ -25,6 +25,8 @@ var server = httpserver.listen(7088, 'localhost', function() {
 
 
 io.on('connection', function(socket){
+    socket.emit('hello', { hello: 'socket.io is working' });
+    
     socket.userID = Math.floor(Math.random()*1000000000000000).toString();;
     socket.join(socket.userID);
     console.log("a new user");
@@ -46,97 +48,46 @@ io.on('connection', function(socket){
 
 
 // Mongoose connection to MongoDB (ted/ted is readonly)
-mongoose.connect('mongodb://localhost/testTestForErrors2', function(error) {
+mongoose.connect('mongodb://localhost/'+models.Config.dbname, function(error) {
     if (error) {
         console.log(error);
     }
 });
 
 // Mongoose Model definitions
-var Group = models.Group;
+//var Group = models.Group;
 var Szenario = models.Szenario;
 var ActualPosition = models.ActualPosition;
 var NewPath = models.NewPath;
 
-//Received data from roboter
-app.post('/initGroup', function(req, res) {
-    //log
-    console.log("received POST /initGroup : ");
-    console.log(req.body);
-    //save in mongodb
-    var gr = new Group(req.body);
-    gr.save(function(err, gr) {
-        console.log("saved: " + gr);
-        if (err)
-            return console.error(err);
-    });
-    res.json(req.body);
-});
-
-function yyyymmddHHMMSS(d) {
-   var yyyy = d.getFullYear().toString();
-   var mm = (d.getMonth()+1).toString(); // getMonth() is zero-based
-   var dd  = d.getDate().toString();
-   var HH = d.getHours().toString();
-   var MM = d.getMinutes().toString();
-   var SS = d.getSeconds().toString();
-   return "/"+yyyy +"-"+ (mm[1]?mm:"0"+mm[0]) + "-"+(dd[1]?dd:"0"+dd[0])+ "/"+(HH[1]?HH:"0"+HH[0])+ ":"+(MM[1]?MM:"0"+MM[0])+ ":"+(SS[1]?SS:"0"+SS[0]); // padding
-  };
 
 //Received data from roboter
 app.post('/initSzenario', function(req, res) {
-    var msg;
+    var msg = { success : 'szenario saved' };
     //log
     console.log("received POST /initSzenario : ");
     console.log(req.body);
-    var szObject = req.body.szenario;
-    var szObjectszname = szObject.szenarioname+ yyyymmddHHMMSS(new Date());
-    
-    szObject.szenarioname=szObjectszname;
+    var szObject = req.body;
+    //add timestamp
     szObject.timestamp = new Date();
     console.log(szObject);
     //save in mongodb
-    Group.findOne({groupname: req.body.groupname}, function(err, gr) {
+    var sz = new Szenario(szObject);
+    sz.save(function(err, sz) {
         if (err){
             console.error(err);
-            msg = {error : err};
-        }else if(gr == null){
-            console.log('cant find group with name:'+req.body.groupname);
-            msg = {error:'cant find group with name:'+req.body.groupname};
-        }else{
-            szObject._group_id = gr._id;
-            var sz = new Szenario(szObject);
-            sz.save(function(err, sz) {
-                if (err){
-                    console.error(err);
-                    msg ={error:'cant save szenario', information: err};
-                }else {
-                    console.log("saved: " + sz);
-                    gr._szenario_ids.push(sz._id);
-                    console.log(gr);
-                    gr.save(function(err, gr) {
-                       if (err){
-                           console.error(err);
-                           msg ={error:'cant save group', information: err};
-                       }else{
-                           console.log("saved: " + gr);
-                       }
-                    });
-                }
-            });
+            msg ={error:'cant save szenario', information: err};
+        }else {
+            console.log("saved: " + sz);
         }
     });
-    //this is not working for errors
-    if(msg == null){
-        msg = { success : 'group and szenario saved' };
-    }
     console.log(msg);
     res.json(msg);
 });
 
 //Received data from roboter
 app.post('/actualPosition', function(req, res) {
-    var msg;
+    var msg = { success : 'actual Position saved' };
     //log
     console.log("received POST /actualPosition : ");
     console.log(req.body);
@@ -144,23 +95,14 @@ app.post('/actualPosition', function(req, res) {
     actualPositionObject.timestamp = new Date();
     
     //save in mongodb
-    Group.findOne({groupname:req.body.groupname}, function(err, gr) {
-        if(err){
-            console.error(err);
-            msg = {error : err};
-        }else if (gr == null){
-            console.log('cant find group with name:'+req.body.groupname);
-            msg = {error:'cant find group with name:'+req.body.groupname};
-        }else{
-            //get last szenario of this group
-            Szenario.findOne({_group_id:gr._id}, {}, { sort: {timestamp: 'desc'}}, function(err, lastszenario) {
+            Szenario.findOne({szenarioname:actualPositionObject.szenarioname}, {}, {}, function(err, lastszenario) {
                 console.log(lastszenario);
                 if(err){
                     console.error(err);
                     msg = {error : err};
                 }else if (lastszenario == null){
-                    console.log('cant find szenario of group:'+req.body.groupname);
-                    msg = {error:'cant find szenario of group:'+req.body.groupname};
+                    console.log('cant find szenario with name:'+actualPositionObject.szenarioname);
+                    msg = {error:'cant find szenario with name:'+actualPositionObject.szenarioname};
                 }else{
                     console.log(lastszenario._id);
                     actualPositionObject._szenario_id = lastszenario._id;
@@ -177,12 +119,6 @@ app.post('/actualPosition', function(req, res) {
                     });
                 }
             });
-        }
-    });
-    //this is not working for errors
-    if(msg === 'undefined'){
-        msg = { success : 'group and szenario saved' };
-    }
     console.log(msg);
     res.json(msg);
 });
@@ -193,54 +129,40 @@ app.post('/newPath', function(req, res) {
     //log
     console.log("received POST /newPath : ");
     console.log(req.body);
-    //save in mongodb
-    var newPathObject = req.body;
-    newPathObject.timestamp = new Date();
-    
-    //get group
-    Group.findOne({groupname:req.body.groupname}, function(err, gr) {
-        if(err){
-            console.error(err);
-            msg = {error : err};
-        }else if (gr == null){
-            console.log('cant find group with name:'+req.body.groupname);
-            msg = {error:'cant find group with name:'+req.body.groupname};
-        }else{
-            
-            //get last szenario of this group
-            Szenario.findOne({_group_id:gr._id}, {}, { sort: {timestamp: 'desc'}}, function(err, lastszenario) {
-                if(err){
-                    console.error(err);
-                    msg = {error : err};
-                }else if (lastszenario == null){
-                    console.log('cant find szenario of group:'+req.body.groupname);
-                    msg = {error:'cant find szenario of group:'+req.body.groupname};
-                }else{
-                    console.log(lastszenario._id);
-                    newPathObject._szenario_id = lastszenario._id;
-                    var np = new NewPath(newPathObject);
-                    
-                    np.save(function(err, np) {
-                        if (err){
-                            console.error(err);
-                        }else{
-                            console.log("saved: " + np);
-                            //broadcast to clients, send when saved (saving validates)
-                            io.to(lastszenario._id).emit('newPathArray', [np]);
-                        }
-                    });
-                }
-            });
-        }
-    });
-    //this is not working for errors
-    if(msg === 'undefined'){
-        msg = { success : 'group and szenario saved' };
-    }
+    msg = saveNewPath(req);
     console.log(msg);
     res.json(msg);
 });
 
+function saveNewPath(req){
+    //save in mongodb
+    var newPathObject = req.body;
+    newPathObject.timestamp = new Date();
+    Szenario.findOne({szenarioname:newPathObject.szenarioname}, {}, {}, function(err, lastszenario) {
+        if(err){
+            console.error(err);
+            return {error : err};
+        }else if (lastszenario == null){
+            console.log('cant find szenario with name:'+newPathObject.szenarioname);
+            return {error:'cant find szenario with name:'+newPathObject.szenarioname};
+        }else{
+            console.log(lastszenario._id);
+            newPathObject._szenario_id = lastszenario._id;
+            var np = new NewPath(newPathObject);
+
+            np.save(function(err, np) {
+                if (err){
+                    console.error(err);
+                }else{
+                    console.log("saved: " + np);
+                    //broadcast to clients, send when saved (saving validates)
+                    io.to(lastszenario._id).emit('newPathArray', [np]);
+                    return { success : 'new Path saved' };
+                }
+            });
+        }
+    });
+}
 
 function sendExistingDataForSzenario(szenarioID, userID) {
     Szenario.find({_id:szenarioID}, function(err, szenario) {
@@ -271,17 +193,17 @@ function sendExistingDataForSzenario(szenarioID, userID) {
 
 
 
+
+
+
 //TESTING AND READING DB
 
 // URLS management CALLED IN FRONTEND
 app.get('/init', function(req, res) {
     var json={};
-    Group.find({}, function(err, docs) {
-        json.groups = docs;
-        Szenario.find({}, function(err, docs) {
-            json.szenarios = docs;
-            res.json(json);
-        });
+    Szenario.find({}, function(err, docs) {
+        json.szenarios = docs;
+        res.json(json);
     });
 });
 
@@ -381,3 +303,14 @@ app.get('/initFiles', function(req, res) {
     json.modelX3D = fs.readdirSync(path.resolve(__dirname + '/../MapWebsite/uploads/modelX3D'));
     res.json(json);
 });
+
+
+function yyyymmddHHMMSS(d) {
+   var yyyy = d.getFullYear().toString();
+   var mm = (d.getMonth()+1).toString(); // getMonth() is zero-based
+   var dd  = d.getDate().toString();
+   var HH = d.getHours().toString();
+   var MM = d.getMinutes().toString();
+   var SS = d.getSeconds().toString();
+   return "/"+yyyy +"-"+ (mm[1]?mm:"0"+mm[0]) + "-"+(dd[1]?dd:"0"+dd[0])+ "/"+(HH[1]?HH:"0"+HH[0])+ ":"+(MM[1]?MM:"0"+MM[0])+ ":"+(SS[1]?SS:"0"+SS[0]); // padding
+};

@@ -8,6 +8,7 @@
   },
   "author": "Nora",
   "dependencies": {
+    "async": "^1.1.0",
     "body-parser": "^1.12.3",
     "express": "^4.10.2",
     "fs": "0.0.2",

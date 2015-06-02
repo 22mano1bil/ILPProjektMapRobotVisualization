@@ -27,6 +27,17 @@ var server = httpserver.listen(7088, function() {
 io.on('connection', function(socket){
     socket.emit('hello', { hello: 'socket.io is working' });
     
+//    console.log(initSzenario());
+//    console.log(initFiles());
+    initFiles(function(json){
+        socket.emit('initFiles',json);
+    });
+    
+    initSzenario(function(json) {
+        socket.emit('initSzenario',json);
+    });
+    
+    
     socket.userID = Math.floor(Math.random()*1000000000000000).toString();;
     socket.join(socket.userID);
     console.log("a new user");
@@ -129,22 +140,16 @@ app.post('/newPath', function(req, res) {
     //log
     console.log("received POST /newPath : ");
     console.log(req.body);
-    msg = saveNewPath(req);
-    console.log(msg);
-    res.json(msg);
-});
-
-function saveNewPath(req){
     //save in mongodb
     var newPathObject = req.body;
     newPathObject.timestamp = new Date();
     Szenario.findOne({szenarioname:newPathObject.szenarioname}, {}, {}, function(err, lastszenario) {
         if(err){
             console.error(err);
-            return {error : err};
+            res.json({error : err});
         }else if (lastszenario == null){
             console.log('cant find szenario with name:'+newPathObject.szenarioname);
-            return {error:'cant find szenario with name:'+newPathObject.szenarioname};
+            res.json({error:'cant find szenario with name:'+newPathObject.szenarioname});
         }else{
             console.log(lastszenario._id);
             newPathObject._szenario_id = lastszenario._id;
@@ -157,12 +162,13 @@ function saveNewPath(req){
                     console.log("saved: " + np);
                     //broadcast to clients, send when saved (saving validates)
                     io.to(lastszenario._id).emit('newPathArray', [np]);
-                    return { success : 'new Path saved' };
+                    res.json({ success : 'new Path saved' });
                 }
             });
         }
     });
-}
+});
+
 
 function sendExistingDataForSzenario(szenarioID, userID) {
     Szenario.find({_id:szenarioID}, function(err, szenario) {
@@ -199,13 +205,13 @@ function sendExistingDataForSzenario(szenarioID, userID) {
 //TESTING AND READING DB
 
 // URLS management CALLED IN FRONTEND
-app.get('/init', function(req, res) {
+function initSzenario (cb) {
     var json={};
     Szenario.find({}, function(err, docs) {
         json.szenarios = docs;
-        res.json(json);
+        cb(json);
     });
-});
+};
 
 // URLS management
 app.get('/Groups', function(req, res) {
@@ -296,13 +302,12 @@ app.post('/uploadFloorplanJSON', multerForFloorplanJSON, function (req, res) {
 });
 
 // URLS management CALLED IN FRONTEND
-app.get('/initFiles', function(req, res) {
+function initFiles (cb) {
     var json = {};
-    console.log(fs.readdirSync(path.resolve(__dirname + '/../MapWebsite/uploads/floorplanJSON')));
     json.floorplanJSON = fs.readdirSync(path.resolve(__dirname + '/../MapWebsite/uploads/floorplanJSON'));
     json.modelX3D = fs.readdirSync(path.resolve(__dirname + '/../MapWebsite/uploads/modelX3D'));
-    res.json(json);
-});
+    cb(json);
+};
 
 
 function yyyymmddHHMMSS(d) {

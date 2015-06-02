@@ -1,22 +1,22 @@
 $(document).ready(function() {
-    $.ajax({
-        type: 'GET',
-        url: '/init',
-        dataType: 'json',
-        success: function(json) {
-            console.log(json);
-            initSzenario(json);
-        }
-    });
-        $.ajax({
-        type: 'GET',
-        url: '/initFiles',
-        dataType: 'json',
-        success: function(json) {
-            console.log(json);
-            initFiles(json);
-        }
-    });
+//    $.ajax({
+//        type: 'GET',
+//        url: '/init',
+//        dataType: 'json',
+//        success: function(json) {
+//            console.log(json);
+//            initSzenario(json);
+//        }
+//    });
+//        $.ajax({
+//        type: 'GET',
+//        url: '/initFiles',
+//        dataType: 'json',
+//        success: function(json) {
+//            console.log(json);
+//            initFiles(json);
+//        }
+//    });
 });
 
 function initSzenario(json){
@@ -49,6 +49,8 @@ function initFiles(json){
         floorplanJSONselect.selectpicker('refresh');
     }     
 }
+
+
 $("#floorplanjson").fileinput({
     allowedFileExtensions: ["json"],
     uploadUrl: "/uploadFloorplanJSON", // server upload action

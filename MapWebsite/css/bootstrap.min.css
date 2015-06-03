@@ -1085,7 +1085,7 @@ textarea {
     font-size: inherit;
     line-height: inherit;
     color:black;
-    float:right;
+    /* float:right; */
     padding: 6px 12px;
 }
 a {

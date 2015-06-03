@@ -4,6 +4,8 @@ testing posts
 var fs = require('fs');
 var request = require('request-json');
 var async = require('async');
+var deleteDB = require('./deleteDB');
+
 var client = request.createClient('http://localhost:7088');
 
 var datadir = './'+"testdatadummyrob";

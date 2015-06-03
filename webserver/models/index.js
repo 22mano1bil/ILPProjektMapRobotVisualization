@@ -2,4 +2,3 @@
 exports.Szenario = require('./szenario')
 exports.NewPath = require('./newPath')
 exports.ActualPosition = require('./actualPosition')
-exports.Config = require('./config')

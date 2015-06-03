@@ -13,7 +13,9 @@ app.use(bodyParser.json());
 var multer = require('multer');
 // Mongoose import
 var mongoose = require('mongoose');
+var async = require('async');
 var models = require('./models');
+var config = require(__dirname +'/../config.json');
 
 //default send website and make it listen on port
 app.use(express.static(path.resolve(__dirname + '/../MapWebsite')));
@@ -26,20 +28,14 @@ var server = httpserver.listen(7088, function() {
 
 io.on('connection', function(socket){
     socket.emit('hello', { hello: 'socket.io is working' });
-    
-//    console.log(initSzenario());
-//    console.log(initFiles());
+
     initFiles(function(json){
-        socket.emit('initFiles',json);
+        socket.emit('initFilesHTML',json);
     });
     
     initSzenario(function(json) {
-        socket.emit('initSzenario',json);
-    });
-    
-    
-    socket.userID = Math.floor(Math.random()*1000000000000000).toString();;
-    socket.join(socket.userID);
+        socket.emit('initSzenariosHTML',json);
+    });  
     console.log("a new user");
     //source:http://psitsmike.com/2011/10/node-js-and-socket-io-multiroom-chat-tutorial/
     socket.on('switchSzenario', function(szenarioID){
@@ -53,13 +49,32 @@ io.on('connection', function(socket){
             socket.join(szenarioID);
             console.log('socket.join '+szenarioID);
             socket.room = szenarioID;
-            sendExistingDataForSzenario(szenarioID, socket.userID);
+            sendExistingDataForSzenario(szenarioID);
     });
+    socket.on('dummyroboter', function(){
+        console.log('dummyroboter');
+        if (typeof socket.room !== 'undefined') {
+            // leave the current room (stored in session)
+            socket.leave(socket.user);
+            socket.leave(socket.room);
+            console.log('socket.leave '+socket.room);
+        }
+        sendDummyroboterData();
+    })
 });
 
+function sendDummyroboterData() {
+    var data = require(config.dummyroboterfilename);
+    console.log(data);
+    async.eachSeries(data, function(request, cb) {
+        console.log(request.data);
+        io.emit(request.url, [request.data]);
+        setTimeout(cb,10000);
+    });
+}
 
 // Mongoose connection to MongoDB (ted/ted is readonly)
-mongoose.connect('mongodb://localhost/'+models.Config.dbname, function(error) {
+mongoose.connect(config.dbpath+config.dbname, function(error) {
     if (error) {
         console.log(error);
     }
@@ -74,7 +89,6 @@ var NewPath = models.NewPath;
 
 //Received data from roboter
 app.post('/initSzenario', function(req, res) {
-    var msg = { success : 'szenario saved' };
     //log
     console.log("received POST /initSzenario : ");
     console.log(req.body);
@@ -87,18 +101,19 @@ app.post('/initSzenario', function(req, res) {
     sz.save(function(err, sz) {
         if (err){
             console.error(err);
-            msg ={error:'cant save szenario', information: err};
+            res.json({error:'cant save szenario', information: err});
         }else {
             console.log("saved: " + sz);
+            initSzenario(function(json) {
+                socket.emit('initSzenariosHTML',json);
+            });  
+            res.json({ success : 'szenario saved' });
         }
     });
-    console.log(msg);
-    res.json(msg);
 });
 
 //Received data from roboter
 app.post('/actualPosition', function(req, res) {
-    var msg = { success : 'actual Position saved' };
     //log
     console.log("received POST /actualPosition : ");
     console.log(req.body);
@@ -110,10 +125,10 @@ app.post('/actualPosition', function(req, res) {
                 console.log(lastszenario);
                 if(err){
                     console.error(err);
-                    msg = {error : err};
+                    res.json({error : err});
                 }else if (lastszenario == null){
                     console.log('cant find szenario with name:'+actualPositionObject.szenarioname);
-                    msg = {error:'cant find szenario with name:'+actualPositionObject.szenarioname};
+                    res.json({error:'cant find szenario with name:'+actualPositionObject.szenarioname});
                 }else{
                     console.log(lastszenario._id);
                     actualPositionObject._szenario_id = lastszenario._id;
@@ -122,21 +137,20 @@ app.post('/actualPosition', function(req, res) {
                     ap.save(function(err, ap) {
                         if (err){
                             console.error(err);
+                            res.json({error : err});
                         }else{
                             console.log("saved: " + ap);
                             //broadcast to clients, send when saved (saving validates)
-                            io.to(lastszenario._id).emit('actualPositionArray', [ap]);
+                            io.to(lastszenario._id).emit('actualPosition', [ap]);
+                            res.json({ success : 'actualPosition saved' });
                         }
                     });
                 }
             });
-    console.log(msg);
-    res.json(msg);
 });
 
 //Received data from roboter
 app.post('/newPath', function(req, res) {
-    var msg;
     //log
     console.log("received POST /newPath : ");
     console.log(req.body);
@@ -158,11 +172,12 @@ app.post('/newPath', function(req, res) {
             np.save(function(err, np) {
                 if (err){
                     console.error(err);
+                    res.json({error : err});
                 }else{
                     console.log("saved: " + np);
                     //broadcast to clients, send when saved (saving validates)
-                    io.to(lastszenario._id).emit('newPathArray', [np]);
-                    res.json({ success : 'new Path saved' });
+                    io.to(lastszenario._id).emit('newPath', [np]);
+                    res.json({ success : 'newPath saved' });
                 }
             });
         }
@@ -170,28 +185,34 @@ app.post('/newPath', function(req, res) {
 });
 
 
-function sendExistingDataForSzenario(szenarioID, userID) {
+function sendExistingDataForSzenario(szenarioID) {
     Szenario.find({_id:szenarioID}, function(err, szenario) {
-        if (err)
+        if (err){
             return console.error(err);
-        console.log('szenario');
-        console.log(szenario);
-        io.to(userID).emit('szenario', szenario);
+        }else{
+            console.log('initSzenario');
+            console.log(szenario);
+            io.emit('initSzenario', szenario);
+        }
     });
-    NewPath.find({_szenario_id:szenarioID}, {}, { sort: {timestamp: 'desc'}}, function(err, newPathArray) {
-        if (err)
-            return console.error(err);
-        console.log('newPathArray');
-        console.log(newPathArray);
-        io.to(userID).emit('newPathArray', newPathArray);
-    });    
     ActualPosition.findOne({_szenario_id:szenarioID}, {}, { sort: {timestamp: 'desc'}}, function(err, actualPositionArray) {
-        if (err)
+        if (err){
             return console.error(err);
-        console.log('actualPositionArray');
-        console.log(actualPositionArray);
-        io.to(userID).emit('actualPositionArray', [actualPositionArray]);
+        }else{
+            console.log('actualPosition');
+            console.log(actualPositionArray);
+            io.emit('actualPosition', [actualPositionArray]);
+        }
     }); 
+    NewPath.find({_szenario_id:szenarioID}, {}, { sort: {timestamp: 'desc'}}, function(err, newPathArray) {
+        if (err){
+            return console.error(err);
+        }else{
+            console.log('newPath');
+            console.log(newPathArray);
+            io.emit('newPath', newPathArray);
+        }
+    });    
 }
 
 
@@ -201,61 +222,6 @@ function sendExistingDataForSzenario(szenarioID, userID) {
 
 
 
-
-//TESTING AND READING DB
-
-// URLS management CALLED IN FRONTEND
-function initSzenario (cb) {
-    var json={};
-    Szenario.find({}, function(err, docs) {
-        json.szenarios = docs;
-        cb(json);
-    });
-};
-
-// URLS management
-app.get('/Groups', function(req, res) {
-    Group.find({}, function(err, docs) {
-        res.json(docs);
-    });
-});
-
-// URLS management
-app.get('/Szenarios', function(req, res) {
-    Szenario.find({}, function(err, docs) {
-        res.json(docs);
-    });
-});
-
-// URLS management
-//get last szenario of group
-app.get('/Szenario/:groupname', function(req, res) {
-    console.log(req.params.groupname);
-    Group.findOne({groupname:req.params.groupname}, function(err, gr) {
-		Szenario.findOne({_group_id:gr._id}, {}, { sort: {timestamp: 'desc'}}, function(err, lastszenario) {
-			console.log(lastszenario._id);
-			res.json(lastszenario);
-		});
-    });
-});
-
-// URLS management
-app.get('/actualPositions', function(req, res) {
-    ActualPosition.findOne({}, {}, { sort: {'timestamp': 'desc'}}, function(err, docs) {
-        res.json(docs);
-    });
-});
-app.get('/lastPosition', function(req, res) {
-    ActualPosition.find({}, function(err, docs) {
-        res.json(docs);
-    });
-});
-//URLS management
-app.get('/NewPaths', function(req, res) {
-    NewPath.find({}, function(err, docs) {
-        res.json(docs);
-    });
-});
 
 
 var multerForModelX3D = multer(
@@ -301,13 +267,44 @@ app.post('/uploadFloorplanJSON', multerForFloorplanJSON, function (req, res) {
   res.status(200).end();
 });
 
-// URLS management CALLED IN FRONTEND
 function initFiles (cb) {
     var json = {};
     json.floorplanJSON = fs.readdirSync(path.resolve(__dirname + '/../MapWebsite/uploads/floorplanJSON'));
     json.modelX3D = fs.readdirSync(path.resolve(__dirname + '/../MapWebsite/uploads/modelX3D'));
     cb(json);
 };
+
+function initSzenario (cb) {
+    var json={};
+    Szenario.find({}, function(err, docs) {
+        json.szenarios = docs;
+        cb(json);
+    });
+};
+
+
+
+
+// URLS management
+app.get('/initSzenarios', function(req, res) {
+    Szenario.find({}, function(err, docs) {
+        res.json(docs);
+    });
+});
+
+// URLS management
+app.get('/actualPositions', function(req, res) {
+    ActualPosition.findOne({}, {}, { sort: {'timestamp': 'desc'}}, function(err, docs) {
+        res.json(docs);
+    });
+});
+
+//URLS management
+app.get('/newPaths', function(req, res) {
+    NewPath.find({}, function(err, docs) {
+        res.json(docs);
+    });
+});
 
 
 function yyyymmddHHMMSS(d) {

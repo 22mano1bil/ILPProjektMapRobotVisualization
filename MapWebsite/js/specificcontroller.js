@@ -1,25 +1,5 @@
-$(document).ready(function() {
-//    $.ajax({
-//        type: 'GET',
-//        url: '/init',
-//        dataType: 'json',
-//        success: function(json) {
-//            console.log(json);
-//            initSzenario(json);
-//        }
-//    });
-//        $.ajax({
-//        type: 'GET',
-//        url: '/initFiles',
-//        dataType: 'json',
-//        success: function(json) {
-//            console.log(json);
-//            initFiles(json);
-//        }
-//    });
-});
 
-function initSzenario(json){
+function initSzenariosHTML(json){
     var initJSON = json;
     if(initJSON['szenarios'] != null){
         var szenarios = $('#szenarioname');
@@ -31,7 +11,7 @@ function initSzenario(json){
     }
 }
 
-function initFiles(json){
+function initFilesHTML(json){
     if(json['floorplanJSON'] != null){
         var floorplanJSONselect = $('#downloadFloorplanJSONSelect');
         floorplanJSONselect.find('option').remove();
@@ -41,15 +21,14 @@ function initFiles(json){
         floorplanJSONselect.selectpicker('refresh');
     }  
     if(json['modelX3D'] != null){
-        var floorplanJSONselect = $('#downloadModelX3DSelect');
-        floorplanJSONselect.find('option').remove();
+        var modelX3Dselect = $('#downloadModelX3DSelect');
+        modelX3Dselect.find('option').remove();
         $.each(json['modelX3D'], function(i, v) {
-            floorplanJSONselect.append("<option value=" + v + ">" + v + "</option>");
+            modelX3Dselect.append("<option value=" + v + ">" + v + "</option>");
         });
-        floorplanJSONselect.selectpicker('refresh');
+        modelX3Dselect.selectpicker('refresh');
     }     
 }
-
 
 $("#floorplanjson").fileinput({
     allowedFileExtensions: ["json"],
@@ -67,11 +46,12 @@ $("#x3dmodel").fileinput({
 $('#downloadModelX3D').click(function () {
     var modelX3D = $('#downloadModelX3DSelect').find('option:selected').val();
     console.log(modelX3D);
-    $.fileDownload('uploads/floorplanJSON/'+modelX3D);
+    $('#downloadModelX3D').attr('download', modelX3D).attr('href','uploads/modelX3D/'+modelX3D);
 });
 
 $('#downloadFloorplanJSON').click(function () {
+    alert('lklkl');
     var floorplanJSON = $('#downloadFloorplanJSONSelect').find('option:selected').val();
     console.log(floorplanJSON);
-    $.fileDownload('uploads/modelX3D/'+floorplanJSON);
+    $('#downloadFloorplanJSON').attr('download', floorplanJSON).attr('href','uploads/floorplanJSON/'+floorplanJSON);
 });

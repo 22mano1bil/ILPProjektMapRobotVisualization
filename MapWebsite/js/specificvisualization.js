@@ -8,30 +8,36 @@ function buildNewSzenario(data) {
     var ap = x3dscenetransform.find('transform[DEF="ActualPosition"]');
     x3dscenetransform.empty();
     x3dscenetransform.append(ap);
-    addFloorplan(data);
-    
-    x3dscenetransform.append(addx3dModel(data));
-    x3dscenetransform.append(x3dExample());
+    x3dscenetransform.append(addModelX3D(data));
+    buildStartAndEndpoint(data);
+    buildFloorplanJSON(data);
 }
 
-function setInTheMiddle(){
+function setSceneInTheMiddle(){
+    console.log('hiiii');
+    console.log((Math.max.apply(Math,xArray)-Math.min.apply(Math,xArray)));
+    console.log((Math.max.apply(Math,yArray)-Math.min.apply(Math,yArray)));
     var x = (Math.max.apply(Math,xArray)+Math.min.apply(Math,xArray))/2;
     var y = (Math.max.apply(Math,yArray) + Math.min.apply(Math,yArray))/2;
     var middleOfFloorplan = "-"+x+" -"+y+" 0";
-    console.log(xArray);
-    console.log(yArray);
-    console.log(Math.min(xArray));
     console.log("translation"+middleOfFloorplan);
-//    document.getElementById(evt.target.coordinateSystId).setAttribute('translation', middleOfFloorplan); 
     $('X3D scene > transform').attr('translation', middleOfFloorplan );
-//    document.getElementById('CoordinateAxes__CoordinateAxes').setAttribute('position', middleOfFloorplan);
+}
+
+function buildStartAndEndpoint(data) {
+    console.log('startpoint');
+    console.log(data.startpoint);
+    if(typeof((data.startpoint)!=='undefined'))
+        x3dscenetransform.append(zylinderWithMiddlePoint_StartAndEndpoint((data.startpoint), 'startpoint.jpg'));
+    if(typeof((data.endpoint)!=='undefined'))
+        x3dscenetransform.append(zylinderWithMiddlePoint_StartAndEndpoint((data.endpoint), 'endpoint.jpg'));
 }
 
 function buildActualPosition(data) {
     $.each(data, function(i, v) {
         console.log(v);
         var actualPosition = v['actualPosition'];
-        x3dscenetransform.append(zylinderWithMiddlePoint(actualPosition['point']));
+        x3dscenetransform.append(changePositionOfZylinderWithMiddlePoint_ActualPosition(actualPosition['point']));
     }); 
 }
 
@@ -43,16 +49,14 @@ function buildNewPath(data) {
         if(newPath.length>1){
             for (i = 0; i < newPath.length-1; i++) { 
                 //console.log(newPath[i]);
-                x3dscenetransform.append(zylinderWithStartpointAndEndpoint(newPath[i],newPath[i+1]));
+                x3dscenetransform.append(zylinderWithStartpointAndEndpoint_newPath(newPath[i],newPath[i+1]));
                 x3dscenetransform.append(sphereWithPoint(newPath[i+1]));
             }
         }
     });  
 }
-
-
 //auf json zugreifen
-function addFloorplan(data) {
+function buildFloorplanJSON(data) {
   var flickerAPI = "uploads/floorplanJSON/"+data.floorplanJSONref;
   $.getJSON( flickerAPI)
     .done(function( data ) {
@@ -67,14 +71,14 @@ function addFloorplan(data) {
                     console.log(polygon[i]);
                     xArray.push(polygon[i][0]);
                     yArray.push(polygon[i][1]);
-                    x3dscenetransform.append(boxWithStartpointAndEndpoint(polygon[i],polygon[i+1]));
+                    x3dscenetransform.append(boxWithStartpointAndEndpoint_FloorplanPolygonLine(polygon[i],polygon[i+1]));
                 }
             }
        });
-       setInTheMiddle();
+       setSceneInTheMiddle();
     });
 }
-function addx3dModel(data) {
+function addModelX3D(data) {
 //    return "<inline url="+data['modelX3DREF']+"></inline>";
     if(data.floorplanJSONref !== 'undefiend'){
     return '<inline url=uploads/modelX3D/'+data.modelX3Dref+'></inline>';
@@ -82,12 +86,10 @@ function addx3dModel(data) {
 }
 
 function sphereWithPoint(p) {
-//Berechnung der Attribute des Bindungszylinders
     var point = {};
     point.x = p.x;
     point.y = p.y;
     point.z = 0;
-    
     var pointString = point.x + " "+ point.y+" "+ point.z;    
     var sphereString = 
             "<Transform translation='"+pointString+"'>" +
@@ -101,7 +103,7 @@ function sphereWithPoint(p) {
     console.log(sphereString);
     return sphereString;
 };
-function zylinderWithMiddlePoint(mp) {
+function changePositionOfZylinderWithMiddlePoint_ActualPosition(mp) {
 //Berechnung der Attribute des Bindungszylinders
     var point1 = {};
     point1.x = mp.x;
@@ -154,26 +156,12 @@ function zylinderWithMiddlePoint(mp) {
 // Angabe einer Rotation in X3D:
 // 3 Koordinaten der Rotationsachse + Winkel
     rotation = rotation + angle;
-
     var ap = x3dscenetransform.find('transform[DEF="ActualPosition"]');
     ap.attr('translation', position);
     ap.find('transform').attr('rotation', rotation);
-
-//    var zylinderString = 
-//            "<Transform translation='" + position + "'>" + //z is always null/static
-//            "<Transform rotation='" + rotation + "'>" +
-//            "<Shape>" +
-//            "<Cylinder height='"+length+"' radius='0.4' />" + //radius and heigt is static
-//            "<Appearance>" +
-//            "<Material diffuseColor='0.5 0.5 1' />" + //color is static
-//            "</Appearance>" +
-//            "</Shape>" +
-//            "</Transform>" +
-//            "</Transform>";
-//    console.log(zylinderString);
-//    return zylinderString;
 };
-function zylinderWithMiddlePointOLD(mp) {
+
+function zylinderWithMiddlePoint_StartAndEndpoint(mp, imagename) {
 //Berechnung der Attribute des Bindungszylinders
     var point1 = {};
     point1.x = mp.x;
@@ -183,7 +171,7 @@ function zylinderWithMiddlePointOLD(mp) {
     var point2 = {};
     point2.x = mp.x;
     point2.y = mp.y;
-    point2.z = 0.21;
+    point2.z = 0.01;
 
 // Vektor zwischen den Atomen
     var vector = {};
@@ -232,9 +220,10 @@ function zylinderWithMiddlePointOLD(mp) {
             "<Transform translation='" + position + "'>" + //z is always null/static
             "<Transform rotation='" + rotation + "'>" +
             "<Shape>" +
-            "<Cylinder height='"+length+"' radius='0.4' />" + //radius and heigt is static
-            "<Appearance>" +
-            "<Material diffuseColor='0.5 0.5 1' />" + //color is static
+            "<Cylinder height='"+length+"' radius='0.6' />" + //radius and heigt is static
+            "<Appearance>"+
+            "<ImageTexture  url='img/"+imagename+"'>" +
+            "</ImageTexture>" +
             "</Appearance>" +
             "</Shape>" +
             "</Transform>" +
@@ -242,7 +231,7 @@ function zylinderWithMiddlePointOLD(mp) {
     console.log(zylinderString);
     return zylinderString;
 };
-function boxWithStartpointAndEndpoint(p1, p2) {
+function boxWithStartpointAndEndpoint_FloorplanPolygonLine(p1, p2) {
 //Berechnung der Attribute des Bindungszylinders
     var point1 = {};
     point1.x = p1[0];
@@ -301,7 +290,7 @@ function boxWithStartpointAndEndpoint(p1, p2) {
             "<Transform translation='" + position + "'>" + //z is always null/static
             "<Transform rotation='" + rotation + "'>" +
             "<Shape>" +
-            "<Box size=' 0.01 "+length+" 0.3' />" + //radius and heigt is static
+            "<Box size=' 0.05 "+length+" 0.3' />" + //radius and heigt is static
             "<Appearance>" +
             "<ImageTexture  url='img/wood.jpg'><ImageTexture/>" + //color is static
             "</Appearance>" +
@@ -312,7 +301,7 @@ function boxWithStartpointAndEndpoint(p1, p2) {
     return zylinderString;
 };
 
-function zylinderWithStartpointAndEndpoint(p1, p2) {
+function zylinderWithStartpointAndEndpoint_newPath(p1, p2) {
 //Berechnung der Attribute des Bindungszylinders
     var point1 = {};
     point1.x = p1.x;

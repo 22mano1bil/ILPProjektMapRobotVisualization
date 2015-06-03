@@ -3,16 +3,19 @@ var io = io();
 //ONLOAD
 // Listen for the actualPosition event.
 io.on('hello', function (data) {
-    alert(data['hello'])
+    alert(data['hello']);
 });
 
-io.on('initSzenario', function (data) {
-    console.log(data)
-    initSzenario(data);
+io.on('initSzenariosHTML', function (data) {
+    console.log('initSzenarios');
+    console.log(data);
+    initSzenariosHTML(data);
 });
 
-io.on('initFiles', function (data) {
-    initFiles(data);
+io.on('initFilesHTML', function (data) {
+    console.log('initFiles');
+    console.log(data);
+    initFilesHTML(data);
 });
 
 
@@ -23,8 +26,12 @@ $('#watchSzenarioSubmit').click(function () {
     io.emit('switchSzenario', szenarioID);
 });
 
+$('#watchDummyroboterSzenarioSubmit').click(function () {
+    io.emit('dummyroboter');
+});
+
 // Listen for the actualPosition event.
-io.on('szenario', function (data) {
+io.on('initSzenario', function (data) {
     console.log('szenario');
     console.log(data);
     buildNewSzenario(data[0]);
@@ -34,23 +41,11 @@ io.on('szenario', function (data) {
 io.on('actualPosition', function (data) {
     console.log('actualPosition');
     console.log(data);
-})
-
-// Listen for the actualPosition event.
-io.on('actualPositionArray', function (data) {
-    console.log('actualPosition');
-    console.log(data);
     buildActualPosition(data);
 })
 
 // Listen for the newPath event.
 io.on('newPath', function (data) {
-    console.log('newPath');
-    console.log(data);
-})
-
-// Listen for the newPath event.
-io.on('newPathArray', function (data) {
     console.log('newPathArray');
     console.log(data);
     buildNewPath(data);

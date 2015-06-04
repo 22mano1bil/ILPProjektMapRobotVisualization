@@ -19,6 +19,8 @@ function setSceneInTheMiddle(){
     console.log((Math.max.apply(Math,yArray)-Math.min.apply(Math,yArray)));
     var x = (Math.max.apply(Math,xArray)+Math.min.apply(Math,xArray))/2;
     var y = (Math.max.apply(Math,yArray) + Math.min.apply(Math,yArray))/2;
+    x = x*(0.5);
+    y = y*(0.5);
     var middleOfFloorplan = "-"+x+" -"+y+" 0";
     console.log("translation"+middleOfFloorplan);
     $('X3D scene > transform').attr('translation', middleOfFloorplan );
@@ -27,8 +29,10 @@ function setSceneInTheMiddle(){
 function buildStartAndEndpoint(data) {
     console.log('startpoint');
     console.log(data.startpoint);
-    if(typeof((data.startpoint)!=='undefined'))
+    if(typeof((data.startpoint)!=='undefined')){
         x3dscenetransform.append(zylinderWithMiddlePoint_StartAndEndpoint((data.startpoint), 'startpoint.jpg'));
+        x3dscenetransform.append(changePositionOfZylinderWithMiddlePoint_ActualPosition(data.startpoint));
+    }
     if(typeof((data.endpoint)!=='undefined'))
         x3dscenetransform.append(zylinderWithMiddlePoint_StartAndEndpoint((data.endpoint), 'endpoint.jpg'));
 }

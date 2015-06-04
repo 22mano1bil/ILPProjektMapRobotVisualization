@@ -59,17 +59,17 @@ io.on('connection', function(socket){
             socket.leave(socket.room);
             console.log('socket.leave '+socket.room);
         }
-        sendDummyroboterData();
+        sendDummyroboterData(socket);
     })
 });
 
-function sendDummyroboterData() {
+function sendDummyroboterData(socket) {
     var data = require(config.dummyroboterfilename);
     console.log(data);
     async.eachSeries(data, function(request, cb) {
         console.log(request.data);
-        io.emit(request.url, [request.data]);
-        setTimeout(cb,10000);
+        socket.emit(request.url, [request.data]);
+        setTimeout(cb,1200);
     });
 }
 
@@ -294,6 +294,13 @@ app.get('/initSzenarios', function(req, res) {
 
 // URLS management
 app.get('/actualPositions', function(req, res) {
+    ActualPosition.find({}, function(err, docs) {
+        res.json(docs);
+    });
+});
+
+// URLS management
+app.get('/oneactualPositions', function(req, res) {
     ActualPosition.findOne({}, {}, { sort: {'timestamp': 'desc'}}, function(err, docs) {
         res.json(docs);
     });

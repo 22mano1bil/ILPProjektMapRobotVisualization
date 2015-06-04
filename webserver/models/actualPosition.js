@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var pointSchema = require('./pointSchema');
+//var pointSchema = require('./pointSchema');
 // Mongoose Schema definition
 var ActualPositionSchema = mongoose.Schema({
     szenarioname: {type: String, required: true},

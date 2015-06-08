@@ -2,6 +2,11 @@ var x3dscene = $('X3D scene');
 var x3dscenetransform = $('X3D scene > transform > group ');
 var xArray = [];
 var yArray = [];
+var geojsonHeight = 0.3;
+var geojsonWidth = 0.05;
+var newPathRadius = 0.05;
+var geojsonSpace = 0.2;
+var robotinoRadius =0.4;
 
 function buildNewSzenario(data) {
     console.log(data);
@@ -46,37 +51,47 @@ function buildActualPosition(data) {
 }
 
 function buildNewPath(data) {
-    $.each(data, function(i, v) {
-        console.log(v);
+    $.each(data, function(i, v) { 
+        setNewPathsmaller();
+        buildNewPath2(v);
+    });  
+}
+
+function setNewPathsmaller(){
+    x3dscenetransform.find('transform[DEF="NewPath"]').find('cylinder').attr('radius',newPathRadius*0.7);
+    x3dscenetransform.find('transform[DEF="NewPath"]').find('material').attr('diffuseColor','0 1 1');
+}
+function buildNewPath2(v){
+//        console.log(v);
         var newPath = v['newPath'];
-        x3dscenetransform.append(sphereWithPoint(newPath[0]));
+        x3dscenetransform.append(sphereWithPoint_NewPath(newPath[0]));
         if(newPath.length>1){
             for (i = 0; i < newPath.length-1; i++) { 
                 //console.log(newPath[i]);
-                x3dscenetransform.append(zylinderWithStartpointAndEndpoint_newPath(newPath[i],newPath[i+1]));
-                x3dscenetransform.append(sphereWithPoint(newPath[i+1]));
+                x3dscenetransform.append(zylinderWithStartpointAndEndpoint_NewPath(newPath[i],newPath[i+1]));
+                x3dscenetransform.append(sphereWithPoint_NewPath(newPath[i+1]));
             }
-        }
-    });  
+        }   
 }
+
 //auf json zugreifen
 function buildFloorplanJSON(data) {
   var flickerAPI = "uploads/floorplanJSON/"+data.floorplanJSONref;
   $.getJSON( flickerAPI)
     .done(function( data ) {
 //       console.log(data);
-       console.log(data['features']);
+//       console.log(data['features']);
        $.each(data['features'], function(i, v) {
            if(v['properties']['value']=='limit')
                console.log('limit');
            var polygon = v['geometry']['coordinates'][0];
            if(polygon.length>1){
                 for (i = 0; i < polygon.length-1; i++) { 
-                    console.log(polygon[i]);
+//                    console.log(polygon[i]);
                     xArray.push(polygon[i][0]);
                     yArray.push(polygon[i][1]);
                     x3dscenetransform.append(boxWithStartpointAndEndpoint_FloorplanPolygonLine(polygon[i],polygon[i+1]));
-                }
+               }
             }
        });
        setSceneInTheMiddle();
@@ -89,22 +104,22 @@ function addModelX3D(data) {
     }else return "";
 }
 
-function sphereWithPoint(p) {
+function sphereWithPoint_NewPath(p) {
     var point = {};
     point.x = p.x;
     point.y = p.y;
     point.z = 0;
     var pointString = point.x + " "+ point.y+" "+ point.z;    
     var sphereString = 
-            "<Transform translation='"+pointString+"'>" +
+            "<Transform DEF='NewPath' translation='"+pointString+"'>" +
             "<Shape>" +
-            "<Sphere radius='0.05'/>" +
+            "<Sphere radius='"+newPathRadius+"'/>" +
             "<Appearance>" +
             "<Material diffuseColor='0.851 0.961 1'/>" +
             "</Appearance>" +
             "</Shape>" +
             "</Transform>";
-    console.log(sphereString);
+//    console.log(sphereString);
     return sphereString;
 };
 function changePositionOfZylinderWithMiddlePoint_ActualPosition(mp) {
@@ -126,7 +141,7 @@ function changePositionOfZylinderWithMiddlePoint_ActualPosition(mp) {
     vector.z = (point2.z - point1.z);
     
     var length = Math.sqrt(vector.x*vector.x + vector.y * vector.y + vector.z * vector.z);
-    console.log(length);
+//    console.log(length);
     
 // halbierter Vektor zwischen den Atomen
     var middle = {};
@@ -184,7 +199,7 @@ function zylinderWithMiddlePoint_StartAndEndpoint(mp, imagename) {
     vector.z = (point2.z - point1.z);
     
     var length = Math.sqrt(vector.x*vector.x + vector.y * vector.y + vector.z * vector.z);
-    console.log(length);
+//    console.log(length);
     
 // halbierter Vektor zwischen den Atomen
     var middle = {};
@@ -224,7 +239,7 @@ function zylinderWithMiddlePoint_StartAndEndpoint(mp, imagename) {
             "<Transform translation='" + position + "'>" + //z is always null/static
             "<Transform rotation='" + rotation + "'>" +
             "<Shape>" +
-            "<Cylinder height='"+length+"' radius='0.6' />" + //radius and heigt is static
+            "<Cylinder height='"+length+"' radius='"+robotinoRadius*1.2+"' />" + //radius and heigt is static
             "<Appearance>"+
             "<ImageTexture  url='img/"+imagename+"'>" +
             "</ImageTexture>" +
@@ -232,7 +247,7 @@ function zylinderWithMiddlePoint_StartAndEndpoint(mp, imagename) {
             "</Shape>" +
             "</Transform>" +
             "</Transform>";
-    console.log(zylinderString);
+//    console.log(zylinderString);
     return zylinderString;
 };
 function boxWithStartpointAndEndpoint_FloorplanPolygonLine(p1, p2) {
@@ -254,7 +269,7 @@ function boxWithStartpointAndEndpoint_FloorplanPolygonLine(p1, p2) {
     vector.z = (point2.z - point1.z);
     
     var length = Math.sqrt(vector.x*vector.x + vector.y * vector.y + vector.z * vector.z);
-    console.log(length);
+//    console.log(length);
     
 // halbierter Vektor zwischen den Atomen
     var middle = {};
@@ -294,18 +309,18 @@ function boxWithStartpointAndEndpoint_FloorplanPolygonLine(p1, p2) {
             "<Transform translation='" + position + "'>" + //z is always null/static
             "<Transform rotation='" + rotation + "'>" +
             "<Shape>" +
-            "<Box size=' 0.05 "+length+" 0.3' />" + //radius and heigt is static
+            "<Box size=' "+geojsonWidth+" "+length+" "+geojsonHeight+"' />" + //radius and heigt is static
             "<Appearance>" +
             "<ImageTexture  url='img/wood.jpg'><ImageTexture/>" + //color is static
             "</Appearance>" +
             "</Shape>" +
             "</Transform>" +
             "</Transform>";
-    console.log(zylinderString);
+//    console.log(zylinderString);
     return zylinderString;
 };
 
-function zylinderWithStartpointAndEndpoint_newPath(p1, p2) {
+function zylinderWithStartpointAndEndpoint_NewPath(p1, p2) {
 //Berechnung der Attribute des Bindungszylinders
     var point1 = {};
     point1.x = p1.x;
@@ -324,7 +339,7 @@ function zylinderWithStartpointAndEndpoint_newPath(p1, p2) {
     vector.z = (point2.z - point1.z);
     
     var length = Math.sqrt(vector.x*vector.x + vector.y * vector.y + vector.z * vector.z);
-    console.log(length);
+//    console.log(length);
     
 // halbierter Vektor zwischen den Atomen
     var middle = {};
@@ -361,17 +376,17 @@ function zylinderWithStartpointAndEndpoint_newPath(p1, p2) {
 
 
     var zylinderString = 
-            "<Transform translation='" + position + "'>" + //z is always null/static
+            "<Transform DEF='NewPath' translation='" + position + "'>" + //z is always null/static
             "<Transform rotation='" + rotation + "'>" +
             "<Shape>" +
-            "<Cylinder height='"+length+"' radius='0.05' />" + //radius and heigt is static
+            "<Cylinder height='"+length+"' radius='"+newPathRadius+"' />" + //radius and heigt is static
             "<Appearance>" +
-            "<Material diffuseColor='0.851 0.961 1' />" + //color is static
+            "<Material diffuseColor='0.7 0.7 1' />" + //color is static
             "</Appearance>" +
             "</Shape>" +
             "</Transform>" +
             "</Transform>";
-    console.log(zylinderString);
+//    console.log(zylinderString);
     return zylinderString;
 };
 
@@ -396,7 +411,7 @@ function x3dExample() {
     vector.z = (point2.z - point1.z);
     
     var length = Math.sqrt(vector.x*vector.x + vector.y * vector.y + vector.z * vector.z);
-    console.log(length);
+//    console.log(length);
     
 // halbierter Vektor zwischen den Atomen
     var middle = {};
@@ -491,7 +506,7 @@ function x3dExample() {
             "</Appearance>" +
             "</Shape>" +
             "</Transform>";
-    console.log(string);
+//    console.log(string);
     return string;
 };
 

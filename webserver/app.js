@@ -204,7 +204,7 @@ function sendExistingDataForSzenario(szenarioID) {
             io.emit('actualPosition', [actualPositionArray]);
         }
     }); 
-    NewPath.find({_szenario_id:szenarioID}, {}, { sort: {timestamp: 'desc'}}, function(err, newPathArray) {
+    NewPath.find({_szenario_id:szenarioID}, {}, { sort: {timestamp: 'asc'}}, function(err, newPathArray) {
         if (err){
             return console.error(err);
         }else{

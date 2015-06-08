@@ -4,7 +4,7 @@
         "data": {
             "szenarioname": "erstesSzenario",
             "floorplanJSONref": "floorplan_test1.json",
-            "MODELX3Dref": "Deer.x3d",
+            "modelX3Dref": "Deer.x3d",
             "startpoint": {
                 "x": 6.15234375,
                 "y": 23.1201536216956

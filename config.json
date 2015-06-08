@@ -2,5 +2,6 @@
     "appPort":"7088",
     "dbpath":"mongodb://localhost/",
     "dbname": "nomoreGroup",
-    "dummyroboterfilename":"./testdatadummyrob/dummyrob.json"
+    "dummyroboterfilename":"./testdatadummyrob/dummyrob.json",
+    "deleteSzenarioname":"erstesSzenario"
 }

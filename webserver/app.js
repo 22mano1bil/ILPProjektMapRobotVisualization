@@ -81,7 +81,6 @@ mongoose.connect(config.dbpath+config.dbname, function(error) {
 });
 
 // Mongoose Model definitions
-//var Group = models.Group;
 var Szenario = models.Szenario;
 var ActualPosition = models.ActualPosition;
 var NewPath = models.NewPath;
@@ -105,7 +104,7 @@ app.post('/initSzenario', function(req, res) {
         }else {
             console.log("saved: " + sz);
             initSzenario(function(json) {
-                socket.emit('initSzenariosHTML',json);
+                io.emit('initSzenariosHTML',json);
             });  
             res.json({ success : 'szenario saved' });
         }

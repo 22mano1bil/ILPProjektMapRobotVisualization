@@ -1,8 +1,10 @@
 var mongoose = require('mongoose');
-var pointSchema = require('./pointSchema');
 var NewPathSchema = mongoose.Schema({
     szenarioname: {type: String, required: true},
-    newPath: [pointSchema],
+    newPath: [{
+        x: {type: Number, required: true},
+        y: {type: Number, required: true}
+    }],
     _szenario_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Szenario',

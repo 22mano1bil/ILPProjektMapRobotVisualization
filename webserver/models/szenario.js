@@ -6,14 +6,15 @@ var SzenarioSchema = mongoose.Schema({
     floorplanJSONref: {type: String, required: true},
     modelX3Dref: String,
     startpoint: {
-        x: Number,
-        y: Number
+        x: {type: Number, required: true},
+        y: {type: Number, required: true}
     }, 
     endpoint: {
-        x: Number,
-        y: Number
+        x: {type: Number, required: true},
+        y: {type: Number, required: true}
     },
         
 });
 // Mongoose Model definition
+SzenarioSchema.path('szenarioname').index({ unique: true });
 var Szenario = module.exports = mongoose.model('Szenario', SzenarioSchema);

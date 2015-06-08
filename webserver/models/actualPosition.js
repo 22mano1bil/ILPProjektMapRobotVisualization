@@ -5,12 +5,12 @@ var ActualPositionSchema = mongoose.Schema({
     szenarioname: {type: String, required: true},
     actualPosition: {
         point: {
-            x: Number,
-            y: Number
+            x: {type: Number, required: true},
+            y: {type: Number, required: true}
         },
         orientation: {
-            x: Number,
-            y: Number
+            x: {type: Number, required: true},
+            y: {type: Number, required: true}
         }
     },
     _szenario_id: {

@@ -103,6 +103,7 @@ app.post('/initSzenario', function(req, res) {
             res.json({error:'cant save szenario', information: err});
         }else {
             console.log("saved: " + sz);
+            io.emit('promptSzenario',sz);
             initSzenario(function(json) {
                 io.emit('initSzenariosHTML',json);
             });  

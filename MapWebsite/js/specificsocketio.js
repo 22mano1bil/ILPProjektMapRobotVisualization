@@ -6,6 +6,17 @@ io.on('hello', function (data) {
     alert(data['hello']);
 });
 
+io.on('promptSzenario', function (data) {
+    console.log('promptSzenario');
+    console.log(data);
+    var x;
+    if (confirm("New live szenario \""+data.szenarioname+"\" online, do you want to watch it now?") == true) {
+        console.log(data._id)
+        $('html,body').animate({scrollTop: $("#visualization").offset().top},'slow');
+        io.emit('switchSzenario', data._id);
+    }
+});
+
 io.on('initSzenariosHTML', function (data) {
     console.log('initSzenarios');
     console.log(data);

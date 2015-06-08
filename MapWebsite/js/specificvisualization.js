@@ -4,6 +4,8 @@ var xArray = [];
 var yArray = [];
 var geojsonHeight = 0.3;
 var geojsonWidth = 0.05;
+//var geojsonHeight = 0.008;
+//var geojsonWidth = 0.0000001;
 var newPathRadius = 0.05;
 var geojsonSpace = 0.2;
 var robotinoRadius =0.4;
@@ -22,13 +24,28 @@ function setSceneInTheMiddle(){
     console.log('hiiii');
     console.log((Math.max.apply(Math,xArray)-Math.min.apply(Math,xArray)));
     console.log((Math.max.apply(Math,yArray)-Math.min.apply(Math,yArray)));
-    var x = (Math.max.apply(Math,xArray)+Math.min.apply(Math,xArray))/2;
-    var y = (Math.max.apply(Math,yArray) + Math.min.apply(Math,yArray))/2;
-    x = x*(0.5);
-    y = y*(0.5);
-    var middleOfFloorplan = "-"+x+" -"+y+" 0";
+    var xWidth = (Math.max.apply(Math,xArray)-Math.min.apply(Math,xArray));
+    var yWidth = (Math.max.apply(Math,yArray)-Math.min.apply(Math,yArray));
+    var middlex = (Math.max.apply(Math,xArray)+Math.min.apply(Math,xArray))/2;
+    var middley = (Math.max.apply(Math,yArray) + Math.min.apply(Math,yArray))/2;
+    var middlepercent;
+    if((yWidth/xWidth)>0.5){
+        console.log('atü');
+        middlepercent=8/yWidth;
+    }else{
+        console.log('ataaa');
+        middlepercent=14/xWidth;
+    }
+    console.log('middlepercent'+middlepercent);
+    console.log('middlepercent'+middlepercent);
+    middlexnew = middlex*middlepercent;
+    middleynew = middley*middlepercent;
+    var middleOfFloorplan = "-"+middlexnew+" -"+middleynew  +" 0";
+    var scale = middlepercent+" "+middlepercent+" "+middlepercent; 
     console.log("translation"+middleOfFloorplan);
+    console.log("scale"+scale);
     $('X3D scene > transform').attr('translation', middleOfFloorplan );
+    $('X3D scene > transform').attr('scale', scale );
 }
 
 function buildStartAndEndpoint(data) {
@@ -52,26 +69,17 @@ function buildActualPosition(data) {
 
 function buildNewPath(data) {
     $.each(data, function(i, v) { 
-        setNewPathsmaller();
-        buildNewPath2(v);
-    });  
-}
-
-function setNewPathsmaller(){
-    x3dscenetransform.find('transform[DEF="NewPath"]').find('cylinder').attr('radius',newPathRadius*0.7);
-    x3dscenetransform.find('transform[DEF="NewPath"]').find('material').attr('diffuseColor','0 1 1');
-}
-function buildNewPath2(v){
-//        console.log(v);
+        x3dscenetransform.find('transform[DEF="NewPath"]').find('material').attr('transparency','0.4');
         var newPath = v['newPath'];
         x3dscenetransform.append(sphereWithPoint_NewPath(newPath[0]));
         if(newPath.length>1){
             for (i = 0; i < newPath.length-1; i++) { 
-                //console.log(newPath[i]);
+                console.log(zylinderWithStartpointAndEndpoint_NewPath(newPath[i],newPath[i+1]));
                 x3dscenetransform.append(zylinderWithStartpointAndEndpoint_NewPath(newPath[i],newPath[i+1]));
                 x3dscenetransform.append(sphereWithPoint_NewPath(newPath[i+1]));
             }
-        }   
+        }  
+    });  
 }
 
 //auf json zugreifen
@@ -80,8 +88,9 @@ function buildFloorplanJSON(data) {
   $.getJSON( flickerAPI)
     .done(function( data ) {
 //       console.log(data);
-//       console.log(data['features']);
+       console.log(data['features']);
        $.each(data['features'], function(i, v) {
+           console.log(i);
            if(v['properties']['value']=='limit')
                console.log('limit');
            var polygon = v['geometry']['coordinates'][0];
@@ -90,6 +99,7 @@ function buildFloorplanJSON(data) {
 //                    console.log(polygon[i]);
                     xArray.push(polygon[i][0]);
                     yArray.push(polygon[i][1]);
+                    console.log(boxWithStartpointAndEndpoint_FloorplanPolygonLine(polygon[i],polygon[i+1]));
                     x3dscenetransform.append(boxWithStartpointAndEndpoint_FloorplanPolygonLine(polygon[i],polygon[i+1]));
                }
             }
@@ -381,7 +391,7 @@ function zylinderWithStartpointAndEndpoint_NewPath(p1, p2) {
             "<Shape>" +
             "<Cylinder height='"+length+"' radius='"+newPathRadius+"' />" + //radius and heigt is static
             "<Appearance>" +
-            "<Material diffuseColor='0.7 0.7 1' />" + //color is static
+            "<Material diffuseColor='0.6 0.7 1' />" + //color is static
             "</Appearance>" +
             "</Shape>" +
             "</Transform>" +

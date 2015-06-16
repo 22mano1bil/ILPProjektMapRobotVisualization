@@ -1,15 +1,4 @@
-var x3dscene = $('X3D scene');
-var x3dscenetransform = $('X3D scene > transform > group ');
-var xArray = [];
-var yArray = [];
-var geojsonHeight = 0.3;
-var geojsonDistanceHeight = 0.01;
-var geojsonWidth = 0.05;
-//var geojsonHeight = 0.008;
-//var geojsonWidth = 0.0000001;
-var newPathRadius = 0.05;
-var geojsonSpace = 0.2;
-var robotinoRadius =0.4;
+
 
 function setSceneInTheMiddle(){
 //    console.log((Math.max.apply(Math,xArray)-Math.min.apply(Math,xArray)));
@@ -39,7 +28,7 @@ function setSceneInTheMiddle(){
 function addModelX3D(data) {
 //    return "<inline url="+data['modelX3DREF']+"></inline>";
     if(data.floorplanJSONref !== 'undefiend'){
-    return '<inline url=uploads/modelX3D/'+data.modelX3Dref+'></inline>';
+        return '<inline url=uploads/modelX3D/'+data+'></inline>';
     }else return "";
 }
 
@@ -69,7 +58,7 @@ function changePositionOfZylinderWithMiddlePoint_ActualPosition(mp) {
     var tf = transform(point1,point2);
     
     var ap = x3dscenetransform.find('transform[DEF="ActualPosition"]');
-    ap.attr('translation', tf.translation);
+    ap.attr('translation', tf.translation+ "0");
     ap.find('transform').attr('rotation', tf.rotation);
 };
 
@@ -87,7 +76,7 @@ function zylinderWithMiddlePoint_StartAndEndpoint(mp, imagename) {
     
     var tf = transform(point1,point2);
 
-    return zylinderString(tf.translation, tf.rotation, tf.length, robotinoRadius, "<ImageTexture  url='img/"+imagename+"'>");
+    return zylinderString(tf.translation+ "0", tf.rotation, tf.length, robotinoRadius, "<ImageTexture  url='img/"+imagename+"'>");
 };
 function boxWithStartpointAndEndpoint_FloorplanPolygonLine(p1, p2) {
 //Berechnung der Attribute des Bindungszylinders
@@ -103,7 +92,7 @@ function boxWithStartpointAndEndpoint_FloorplanPolygonLine(p1, p2) {
     
     var tf = transform(point1,point2);
     
-    return boxString(tf.translation, tf.rotation, geojsonWidth, tf.length, geojsonHeight, "<ImageTexture  url='img/wood.jpg'><ImageTexture/>");
+    return boxString(tf.translation+geojsonHeight/2, tf.rotation, geojsonWidth, tf.length, geojsonHeight, "<ImageTexture  url='img/wood.jpg'><ImageTexture/>");
 };
 
 function boxWithStartpointAndEndpoint_FloorplanPolygonDistanceLine(p1, p2) {
@@ -120,7 +109,7 @@ function boxWithStartpointAndEndpoint_FloorplanPolygonDistanceLine(p1, p2) {
     
     var tf = transform(point1,point2);
     
-    return boxString(tf.translation, tf.rotation, geojsonWidth, tf.length, geojsonDistanceHeight, "<Material diffuseColor='0.7 0 0.3' transparency='0'/>");
+    return boxString(tf.translation+geojsonDistanceHeight/2, tf.rotation, geojsonWidth, tf.length, geojsonDistanceHeight, "<Material diffuseColor='0.7 0 0.3' transparency='0'/>");
 };
 
 function zylinderWithStartpointAndEndpoint_NewPath(p1, p2) {
@@ -137,7 +126,7 @@ function zylinderWithStartpointAndEndpoint_NewPath(p1, p2) {
     
     var tf = transform(point1,point2);
     
-    return zylinderString(tf.translation, tf.rotation, tf.length, newPathRadius, "<Material diffuseColor='0.6 0.7 1' />");
+    return zylinderString(tf.translation+ "0", tf.rotation, tf.length, newPathRadius, "<Material diffuseColor='0.6 0.7 1' />");
 };
 
 function sphereString(position, radius, appearance){
@@ -195,7 +184,8 @@ function transform(point1, point2) {
 
 // Mittelpunkt zwischen den beiden Punkten
     var position = (point1.x + middle.x) + " "
-            + (point1.y + middle.y) + " " + (point1.z + middle.z);
+            + (point1.y + middle.y) + " ";
+    //+ (point1.z + middle.z);
 
 // Winkel zwischen middle und Y-Achse
     var help = middle.x * middle.x + middle.y * middle.y

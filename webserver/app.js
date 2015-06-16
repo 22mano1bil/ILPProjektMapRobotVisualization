@@ -30,7 +30,7 @@ app.get('/watchModelX3D', function(req, res) {
 });
 
 app.get('/watchFloorplanJSON', function(req, res) {
-    res.sendFile(path.resolve(__dirname + '/../MapWebsite/watchModelX3D.html'));
+    res.sendFile(path.resolve(__dirname + '/../MapWebsite/watchFloorplanJSON.html'));
 });
 
 app.get('/watchFloorplanJSONandModelX3D', function(req, res) {
@@ -44,6 +44,7 @@ app.get('/editModelX3D', function(req, res) {
 app.get('/editFloorplanJSON', function(req, res) {
     res.sendFile(path.resolve(__dirname + '/../MapWebsite/watchModelX3D.html'));
 });
+
 io.on('connection', function(socket){
     socket.emit('hello', { hello: 'socket.io is working' });
 

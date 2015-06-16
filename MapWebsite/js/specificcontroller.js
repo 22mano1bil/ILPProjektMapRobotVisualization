@@ -57,9 +57,12 @@ $('#downloadFloorplanJSON').click(function () {
 
 $('#watchFloorplanJSON').click(function () {
     
-    var floorplanJSON = $('#downloadFloorplanJSONSelect').find('option:selected').val();
-    console.log(floorplanJSON);
-    buildFloorplan(floorplanJSON);
+    var floorplanJSONref = $('#downloadFloorplanJSONSelect').find('option:selected').val();
+    console.log(floorplanJSONref);
+    var ap = x3dscenetransform.find('transform[DEF="ActualPosition"]');
+    x3dscenetransform.empty();
+    x3dscenetransform.append(ap);
+    buildFloorplanJSON(floorplanJSONref);
 });
 
 $('#watchModelX3D').click(function () {

@@ -50,8 +50,23 @@ $('#downloadModelX3D').click(function () {
 });
 
 $('#downloadFloorplanJSON').click(function () {
-    alert('lklkl');
     var floorplanJSON = $('#downloadFloorplanJSONSelect').find('option:selected').val();
     console.log(floorplanJSON);
     $('#downloadFloorplanJSON').attr('download', floorplanJSON).attr('href','uploads/floorplanJSON/'+floorplanJSON);
+});
+
+$('#watchFloorplanJSON').click(function () {
+    
+    var floorplanJSON = $('#downloadFloorplanJSONSelect').find('option:selected').val();
+    console.log(floorplanJSON);
+    buildFloorplan(floorplanJSON);
+});
+
+$('#watchModelX3D').click(function () {
+    var modelX3Dref = $('#downloadModelX3DSelect').find('option:selected').val();
+    console.log(modelX3Dref);
+    var ap = x3dscenetransform.find('transform[DEF="ActualPosition"]');
+    x3dscenetransform.empty();
+    x3dscenetransform.append(ap);
+    x3dscenetransform.append(addModelX3D(modelX3Dref));
 });

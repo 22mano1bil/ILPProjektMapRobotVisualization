@@ -2,22 +2,23 @@ var x3dscene = $('X3D scene');
 var x3dscenetransform = $('X3D scene > transform > group ');
 var xArray = [];
 var yArray = [];
-var geojsonHeight = 0.3;
-var geojsonWidth = 0.05;
+var geojsonHeight = 0.1;
+var geojsonDistanceHeight = 0.1;
+var geojsonWidth = 0.01;
 //var geojsonHeight = 0.008;
 //var geojsonWidth = 0.0000001;
-var newPathRadius = 0.05;
-var geojsonSpace = 0.2;
-var robotinoRadius =0.4;
+var newPathRadius = 0.02;
+var robotinoRadius =0.05;
+var geojsonSpace = robotinoRadius;
 
 function buildNewSzenario(data) {
 //    console.log(data);
     var ap = x3dscenetransform.find('transform[DEF="ActualPosition"]');
     x3dscenetransform.empty();
     x3dscenetransform.append(ap);
-    x3dscenetransform.append(addModelX3D(data));
+    x3dscenetransform.append(addModelX3D(data.modelX3Dref));
     buildStartAndEndpoint(data);
-    buildFloorplanJSON(data);
+    buildFloorplanJSON(data.floorplanJSONref);
 }
 
 
@@ -57,7 +58,7 @@ function buildNewPath(data) {
 
 //auf json zugreifen
 function buildFloorplanJSON(data) {
-  var flickerAPI = "uploads/floorplanJSON/"+data.floorplanJSONref;
+  var flickerAPI = "uploads/floorplanJSON/"+data;
   $.getJSON( flickerAPI)
     .done(function( data ) {
 //       console.log(data);

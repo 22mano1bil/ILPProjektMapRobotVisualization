@@ -24,8 +24,26 @@ var server = httpserver.listen(7088, function() {
     var port = server.address().port;
     console.log('Example app listening at http://%s:%s', host, port);
 });
+//Received data from roboter
+app.get('/watchModelX3D', function(req, res) {
+    res.sendFile(path.resolve(__dirname + '/../MapWebsite/watchModelX3D.html'));
+});
 
+app.get('/watchFloorplanJSON', function(req, res) {
+    res.sendFile(path.resolve(__dirname + '/../MapWebsite/watchModelX3D.html'));
+});
 
+app.get('/watchFloorplanJSONandModelX3D', function(req, res) {
+    res.sendFile(path.resolve(__dirname + '/../MapWebsite/watchModelX3D.html'));
+});
+
+app.get('/editModelX3D', function(req, res) {
+    res.sendFile(path.resolve(__dirname + '/../MapWebsite/watchModelX3D.html'));
+});
+
+app.get('/editFloorplanJSON', function(req, res) {
+    res.sendFile(path.resolve(__dirname + '/../MapWebsite/watchModelX3D.html'));
+});
 io.on('connection', function(socket){
     socket.emit('hello', { hello: 'socket.io is working' });
 
@@ -49,7 +67,7 @@ io.on('connection', function(socket){
             socket.join(szenarioID);
             console.log('socket.join '+szenarioID);
             socket.room = szenarioID;
-            sendExistingDataForSzenario(szenarioID);
+            sendExistingDataForSzenario(szenarioID, socket);
     });
     socket.on('dummyroboter', function(){
         console.log('dummyroboter');
@@ -66,10 +84,17 @@ io.on('connection', function(socket){
 function sendDummyroboterData(socket) {
     var data = require(config.dummyroboterfilename);
     console.log(data);
+    var first = true;
     async.eachSeries(data, function(request, cb) {
         console.log(request.data);
         socket.emit(request.url, [request.data]);
-        setTimeout(cb,1200);
+        if (!first) {
+            setTimeout(cb,2000); 
+        }
+        else {
+            setTimeout(cb,3000);
+            first = false;
+        }
     });
 }
 
@@ -185,14 +210,14 @@ app.post('/newPath', function(req, res) {
 });
 
 
-function sendExistingDataForSzenario(szenarioID) {
+function sendExistingDataForSzenario(szenarioID,socket) {
     Szenario.find({_id:szenarioID}, function(err, szenario) {
         if (err){
             return console.error(err);
         }else{
             console.log('initSzenario');
             console.log(szenario);
-            io.emit('initSzenario', szenario);
+            socket.emit('initSzenario', szenario);
         }
     });
     ActualPosition.findOne({_szenario_id:szenarioID}, {}, { sort: {timestamp: 'desc'}}, function(err, actualPositionArray) {
@@ -201,7 +226,7 @@ function sendExistingDataForSzenario(szenarioID) {
         }else{
             console.log('actualPosition');
             console.log(actualPositionArray);
-            io.emit('actualPosition', [actualPositionArray]);
+            socket.emit('actualPosition', [actualPositionArray]);
         }
     }); 
     NewPath.find({_szenario_id:szenarioID}, {}, { sort: {timestamp: 'asc'}}, function(err, newPathArray) {
@@ -210,7 +235,7 @@ function sendExistingDataForSzenario(szenarioID) {
         }else{
             console.log('newPath');
             console.log(newPathArray);
-            io.emit('newPath', newPathArray);
+            socket.emit('newPath', newPathArray);
         }
     });    
 }

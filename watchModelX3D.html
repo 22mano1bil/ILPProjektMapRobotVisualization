@@ -59,18 +59,9 @@
                 <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
                     <ul class="nav navbar-nav">
                         <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
-                        <li class="hidden">
-                            <a href="#page-top"></a>
-                        </li>
-                        <li>
-                            <a class="page-scroll" href="#fileupload">Select szenario</a>
-                        </li>
                         <li>
                             <a class="page-scroll" href="#visualization">Visualization</a>
-                        </li>
-                        <li>
-                            <a class="page-scroll" href="#settings">Settings</a>
-                        </li>                       
+                        </li>                      
                         <li>
                             <a class="page-scroll" href="#contact"><i class="fa fa-envelope"></i></a>
                         </li>
@@ -81,60 +72,7 @@
             <!-- /.container -->
         </nav>
 
-
-
-        <!-- Intro Header -->
-        <header class="intro intro1">
-            <div class="intro-body">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-8 col-md-offset-2">
-                            <h1 class="brand-heading">Robodino Visualization<br>@ HFT</h1>
-                            <p class="intro-text">On this webpage you can see the planned path and actual position of your Robotino.
-                                </br> Therefore you need a floormap in geoJSON format. A 3D-model is optional.</p>
-                            <!--a href="#fileupload" class="btn btn-circle page-scroll">
-                                <i class="fa fa-angle-double-down animated"></i>
-                            </a-->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-
-
-        <!-- Intro Header -->
-        <header id="fileupload" class="intro intro2">
-            <div class="intro-body">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6 col-md-offset-3">
-                            <h1>Select szenario</h1>
-                            </br>
-                            <form id = "watch">
-                                <div class="row">
-                                    <select id="szenarioname" class="selectpicker" data-width="auto" data-size="5"  data-selected-text-format="count">
-                                    </select>
-                                </div>
-                                </br>
-                                <div class="row">
-                                    <a href="#visualization" id ="watchSzenarioSubmit" class="page-scroll btn btn-primary">
-                                        watch szenario
-                                    </a>
-                                </div>
-                                </br>
-                                </br>
-                                <div class="row">
-                                    <a href="#visualization" id ="watchDummyroboterSzenarioSubmit" class="page-scroll btn btn-primary">
-                                        or watch live dummyroboter szenario
-                                    </a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>		
+	
         <!-- actualdata Section -->
         <section id="visualization" class="container content-section text-center">
             <h1>Visualization</h1>
@@ -161,6 +99,7 @@
                 </scene>
             </x3d>
         </section>	
+        
         <!-- actualdata Section -->
        <header id="settings" class="intro intro2">
             <div class="intro-body">
@@ -168,28 +107,13 @@
         <!--section id="" class="container content-section text-center"-->
             <h1>Settings</h1>
             <form id = "uploadForm">
-                <h4>Upload Floorplan in JSON: </h4>
-                <div class="col-xs-12 col-md-6 col-md-offset-3">
-                <input id="floorplanjson" name="floorplanjson"  type="file" data-show-preview="false">
-                </div>
-                </br>
-                </br>
-                </br>
-                <h4>Upload 3D-Model in X3D: </h4>
-                <div class="col-xs-12 col-md-6 col-md-offset-3">
-                <input id="x3dmodel" name="x3dmodel" type="file" data-show-preview="false">
-                </div>
-                </br>
-                </br>
-                </br>
-                </br>
-                <h4>Download Floorplan in JSON: </h4>
+                <!--h4>Download Floorplan in JSON: </h4>
                 <select id="downloadFloorplanJSONSelect" class="selectpicker" data-width="auto" data-size="5">
                 </select>
                 
                 <a id="downloadFloorplanJSON"  class="btn btn-primary">
                     Download
-                </a>
+                </a-->
                 </br>
                 </br>
                 <h4>Download 3D-Model in X3D: </h4>

@@ -1,0 +1,287 @@
+[
+    {
+        "url": "initSzenario",
+        "data": {
+            "szenarioname": "zweitesSzenario",
+            "floorplanJSONref": "Karte-mit_Start-Ende.json",
+            "modelX3Dref": "Deer.x3d",
+            "startpoint": {
+            "x":12.161865234375,
+            "y":22.543000965921863
+        },
+            "endpoint": 
+          {
+            "x":15.644531250000002,
+            "y":21.84620351827813
+        }
+        }
+    },
+    {
+        "url": "newPath",
+        "data": {
+            "szenarioname": "zweitesSzenario",
+            "newPath": [
+          {
+            "x":12.161865234375,
+            "y":22.543000965921863
+        },
+          {
+            "x":12.315673828125,
+            "y":22.44149485938026
+        },
+          {
+            "x":12.5848388671875,
+            "y":22.019453218696622
+        },
+          {
+            "x":13.2275390625,
+            "y":21.84620351827813
+        },
+          {
+            "x":13.826293945312498,
+            "y":21.6778482933475
+        },
+          {
+            "x":14.1943359375,
+            "y":21.43261686447735
+        },
+          {
+            "x":14.5733642578125,
+            "y":21.442843107187667
+        },
+          {
+            "x":15.0347900390625,
+            "y":21.76970289940967
+        },
+          {
+            "x":15.644531250000002,
+            "y":21.84620351827813
+        }
+            ]
+
+        }
+
+    },
+    {
+        "url": "actualPosition",
+        "data": {
+            "szenarioname": "zweitesSzenario",
+            "actualPosition": {
+                "point": 
+                {
+            "x":12.161865234375,
+            "y":22.543000965921863
+        },
+                "orientation": {
+                    "x": 1,
+                    "y": 2
+                }
+            }
+        }
+    },
+    {
+        "url": "actualPosition",
+        "data": {
+            "szenarioname": "zweitesSzenario",
+            "actualPosition": {
+                "point": 
+                {
+            "x":12.315673828125,
+            "y":22.44149485938026
+        },
+                "orientation": {
+                    "x": 1,
+                    "y": 2
+                }
+            }
+        }
+    },
+    {
+        "url": "actualPosition",
+        "data": {
+            "szenarioname": "zweitesSzenario",
+            "actualPosition": {
+                "point": 
+                {
+            "x":12.5848388671875,
+            "y":22.019453218696622
+        },
+                "orientation": {
+                    "x": 1,
+                    "y": 2
+                }
+            }
+        }
+    },
+    {
+        "url": "actualPosition",
+        "data": {
+            "szenarioname": "zweitesSzenario",
+            "actualPosition": {
+                "point": 
+                {
+            "x":13.2275390625,
+            "y":21.84620351827813
+        },
+                "orientation": {
+                    "x": 1,
+                    "y": 2
+                }
+            }
+        }
+    },
+    {
+        "url": "newPath",
+        "data": {
+            "szenarioname": "zweitesSzenario",
+            "newPath": [
+         {
+            "x":12.161865234375,
+            "y":22.543000965921863
+        },
+          {
+            "x":12.315673828125,
+            "y":22.44149485938026
+        },
+          {
+            "x":12.5848388671875,
+            "y":22.019453218696622
+        }, 
+        {
+            "x":13.2275390625,
+            "y":21.84620351827813
+        },
+                    
+          {
+            "x":13.348388671875,
+            "y":21.314963641717597
+          },
+          {
+            "x":13.90869140625,
+            "y":21.284255964050555
+          },
+          
+          {
+            "x":14.1943359375,
+            "y":21.43261686447735
+        },
+          {
+            "x":14.5733642578125,
+            "y":21.442843107187667
+        },
+          {
+            "x":15.0347900390625,
+            "y":21.76970289940967
+        },
+          {
+            "x":15.644531250000002,
+            "y":21.84620351827813
+        }
+            ]
+
+        }
+
+    },
+    {
+        "url": "actualPosition",
+        "data": {
+            "szenarioname": "zweitesSzenario",
+            "actualPosition": {
+                "point": 
+                {
+            "x":13.348388671875,
+            "y":21.314963641717597
+          },
+                "orientation": {
+                    "x": 1,
+                    "y": 2
+                }
+            }
+        }
+    },
+    {
+        "url": "actualPosition",
+        "data": {
+            "szenarioname": "zweitesSzenario",
+            "actualPosition": {
+                "point": 
+                {
+            "x":13.90869140625,
+            "y":21.284255964050555
+          },
+                "orientation": {
+                    "x": 1,
+                    "y": 2
+                }
+            }
+        }
+    },
+    {
+        "url": "actualPosition",
+        "data": {
+            "szenarioname": "zweitesSzenario",
+            "actualPosition": {
+                "point": 
+                {
+            "x":14.1943359375,
+            "y":21.43261686447735
+        },
+                "orientation": {
+                    "x": 1,
+                    "y": 2
+                }
+            }
+        }
+    },
+    {
+        "url": "actualPosition",
+        "data": {
+            "szenarioname": "zweitesSzenario",
+            "actualPosition": {
+                "point": 
+                {
+            "x":14.5733642578125,
+            "y":21.442843107187667
+        },
+                "orientation": {
+                    "x": 1,
+                    "y": 2
+                }
+            }
+        }
+    },
+    {
+        "url": "actualPosition",
+        "data": {
+            "szenarioname": "zweitesSzenario",
+            "actualPosition": {
+                "point": 
+                {
+            "x":15.0347900390625,
+            "y":21.76970289940967
+        },
+                "orientation": {
+                    "x": 1,
+                    "y": 2
+                }
+            }
+        }
+    },
+    {
+        "url": "actualPosition",
+        "data": {
+            "szenarioname": "zweitesSzenario",
+            "actualPosition": {
+                "point": 
+                {
+            "x":15.644531250000002,
+            "y":21.84620351827813
+        },
+                "orientation": {
+                    "x": 1,
+                    "y": 2
+                }
+            }
+        }
+    }
+]

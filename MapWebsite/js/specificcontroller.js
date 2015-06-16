@@ -73,3 +73,15 @@ $('#watchModelX3D').click(function () {
     x3dscenetransform.append(ap);
     x3dscenetransform.append(addModelX3D(modelX3Dref));
 });
+
+$('#watchModelX3DandFloorplanJSON').click(function () {
+    var floorplanJSONref = $('#downloadFloorplanJSONSelect').find('option:selected').val();
+    console.log(floorplanJSONref);
+    var modelX3Dref = $('#downloadModelX3DSelect').find('option:selected').val();
+    console.log(modelX3Dref);
+    var ap = x3dscenetransform.find('transform[DEF="ActualPosition"]');
+    x3dscenetransform.empty();
+    x3dscenetransform.append(ap);
+    x3dscenetransform.append(addModelX3D(modelX3Dref));
+    buildFloorplanJSON(floorplanJSONref);
+});

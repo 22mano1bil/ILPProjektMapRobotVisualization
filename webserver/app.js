@@ -24,7 +24,11 @@ var server = httpserver.listen(7088, function() {
     var port = server.address().port;
     console.log('Example app listening at http://%s:%s', host, port);
 });
-//Received data from roboter
+
+app.get('/', function(req, res) {
+    res.sendFile(path.resolve(__dirname + '/../MapWebsite/index.html'));
+});
+
 app.get('/watchModelX3D', function(req, res) {
     res.sendFile(path.resolve(__dirname + '/../MapWebsite/watchModelX3D.html'));
 });
@@ -33,16 +37,8 @@ app.get('/watchFloorplanJSON', function(req, res) {
     res.sendFile(path.resolve(__dirname + '/../MapWebsite/watchFloorplanJSON.html'));
 });
 
-app.get('/watchFloorplanJSONandModelX3D', function(req, res) {
-    res.sendFile(path.resolve(__dirname + '/../MapWebsite/watchModelX3D.html'));
-});
-
-app.get('/editModelX3D', function(req, res) {
-    res.sendFile(path.resolve(__dirname + '/../MapWebsite/watchModelX3D.html'));
-});
-
-app.get('/editFloorplanJSON', function(req, res) {
-    res.sendFile(path.resolve(__dirname + '/../MapWebsite/watchModelX3D.html'));
+app.get('/watchModelX3DandFloorplanJSON', function(req, res) {
+    res.sendFile(path.resolve(__dirname + '/../MapWebsite/watchModelX3DandFloorplanJSON.html'));
 });
 
 io.on('connection', function(socket){

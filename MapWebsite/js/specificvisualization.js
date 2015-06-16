@@ -43,7 +43,7 @@ function buildActualPosition(data) {
 
 function buildNewPath(data) {
     $.each(data, function(i, v) { 
-        x3dscenetransform.find('transform[DEF="NewPath"]').find('material').attr('transparency','0.4');
+        x3dscenetransform.find('transform[DEF="NewPath"]').find('material').attr('transparency','0.7').attr('diffuseColor','0 0 0.3');
         var newPath = v['newPath'];
         x3dscenetransform.append(sphereWithPoint_NewPath(newPath[0]));
         if(newPath.length>1){

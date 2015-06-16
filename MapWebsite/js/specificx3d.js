@@ -40,7 +40,7 @@ function sphereWithPoint_NewPath(p) {
     
     var position = point.x + " "+ point.y+" "+ point.z;    
 
-    return sphereString(position, newPathRadius, "<Material diffuseColor='0.6 0.7 1' />");
+    return sphereString("NewPath",position, newPathRadius, "<Material diffuseColor='0.6 0.7 1' />");
 };
 
 function changePositionOfZylinderWithMiddlePoint_ActualPosition(mp) {
@@ -76,7 +76,7 @@ function zylinderWithMiddlePoint_StartAndEndpoint(mp, imagename) {
     
     var tf = transform(point1,point2);
 
-    return zylinderString(tf.translation+ "0", tf.rotation, tf.length, robotinoRadius, "<ImageTexture  url='img/"+imagename+"'>");
+    return zylinderString("StartEndPoint",tf.translation+ "0", tf.rotation, tf.length, robotinoRadius, "<ImageTexture  url='img/"+imagename+"'>");
 };
 function boxWithStartpointAndEndpoint_FloorplanPolygonLine(p1, p2) {
 //Berechnung der Attribute des Bindungszylinders
@@ -92,7 +92,7 @@ function boxWithStartpointAndEndpoint_FloorplanPolygonLine(p1, p2) {
     
     var tf = transform(point1,point2);
     
-    return boxString(tf.translation+geojsonHeight/2, tf.rotation, geojsonWidth, tf.length, geojsonHeight, "<ImageTexture  url='img/wood.jpg'><ImageTexture/>");
+    return boxString("Floorplan",tf.translation+geojsonHeight/2, tf.rotation, geojsonWidth, tf.length, geojsonHeight, "<ImageTexture  url='img/wood.jpg'><ImageTexture/>");
 };
 
 function boxWithStartpointAndEndpoint_FloorplanPolygonDistanceLine(p1, p2) {
@@ -109,7 +109,7 @@ function boxWithStartpointAndEndpoint_FloorplanPolygonDistanceLine(p1, p2) {
     
     var tf = transform(point1,point2);
     
-    return boxString(tf.translation+geojsonDistanceHeight/2, tf.rotation, geojsonWidth, tf.length, geojsonDistanceHeight, "<Material diffuseColor='0.7 0 0.3' transparency='0'/>");
+    return boxString("Floorplan",tf.translation+geojsonDistanceHeight/2, tf.rotation, geojsonWidth, tf.length, geojsonDistanceHeight, "<Material diffuseColor='0.7 0 0.3' transparency='0'/>");
 };
 
 function zylinderWithStartpointAndEndpoint_NewPath(p1, p2) {
@@ -126,11 +126,11 @@ function zylinderWithStartpointAndEndpoint_NewPath(p1, p2) {
     
     var tf = transform(point1,point2);
     
-    return zylinderString(tf.translation+ "0", tf.rotation, tf.length, newPathRadius, "<Material diffuseColor='0.6 0.7 1' />");
+    return zylinderString("NewPath",tf.translation+ "0", tf.rotation, tf.length, newPathRadius, "<Material diffuseColor='0.6 0.7 1' />");
 };
 
-function sphereString(position, radius, appearance){
-    return "<Transform DEF='NewPath' translation='"+position+"'>" +
+function sphereString(def, position, radius, appearance){
+    return "<Transform DEF='"+def+"' translation='"+position+"'>" +
             "<Shape>" +
             "<Sphere radius='"+radius+"'/>" +
             "<Appearance>" +
@@ -139,8 +139,8 @@ function sphereString(position, radius, appearance){
             "</Shape>" +
             "</Transform>";
 }
-function boxString(position, rotation, width, length, height, appearance){
-    return "<Transform DEF='NewPath' translation='" + position + "'>" + 
+function boxString(def, position, rotation, width, length, height, appearance){
+    return "<Transform DEF='"+def+"' translation='" + position + "'>" + 
             "<Transform rotation='" + rotation + "'>" +
             "<Shape>" +
             "<Box size=' "+width+" "+length+" "+height+"' />" + 
@@ -152,8 +152,8 @@ function boxString(position, rotation, width, length, height, appearance){
             "</Transform>";  
 }
 
-function zylinderString(position, rotation, height, radius, appearance){
-    return "<Transform DEF='NewPath' translation='" + position + "'>" + 
+function zylinderString(def, position, rotation, height, radius, appearance){
+    return "<Transform DEF='"+def+"' translation='" + position + "'>" + 
             "<Transform rotation='" + rotation + "'>" +
             "<Shape>" +
             "<Cylinder height='"+height+"' radius='"+radius+"' />" + 

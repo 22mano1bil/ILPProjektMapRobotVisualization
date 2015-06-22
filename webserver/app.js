@@ -300,6 +300,7 @@ function initSzenario (cb) {
     var json={};
     Szenario.find({}, function(err, docs) {
         json.szenarios = docs;
+        console.log(json);
         cb(json);
     });
 };

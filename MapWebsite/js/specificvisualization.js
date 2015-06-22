@@ -4,12 +4,11 @@ var xArray = [];
 var yArray = [];
 var geojsonHeight = 0.1;
 var geojsonDistanceHeight = 0.1;
-var geojsonWidth = 0.01;
+var geojsonWidth = 0.05;
 //var geojsonHeight = 0.008;
 //var geojsonWidth = 0.0000001;
-var newPathRadius = 0.02;
-var robotinoRadius =0.05;
-var geojsonSpace = robotinoRadius;
+var newPathRadius = 0.05;
+var robotinoRadius =0.23;
 
 function buildNewSzenario(data) {
 //    console.log(data);

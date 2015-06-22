@@ -58,7 +58,7 @@ function changePositionOfZylinderWithMiddlePoint_ActualPosition(mp) {
     var tf = transform(point1,point2);
     
     var ap = x3dscenetransform.find('transform[DEF="ActualPosition"]');
-    ap.attr('translation', tf.translation+ "0");
+    ap.attr('translation', tf.translation+ "0.25");
     ap.find('transform').attr('rotation', tf.rotation);
 };
 

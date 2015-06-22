@@ -1,6 +1,7 @@
 
 function initSzenariosHTML(json){
     var initJSON = json;
+    console.log(initJSON);
     if(initJSON['szenarios'] != null){
         var szenarios = $('#szenarioname');
         szenarios.find('option').remove();

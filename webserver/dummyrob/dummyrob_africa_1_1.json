@@ -1,0 +1,364 @@
+[{
+		"url" : "initSzenario",
+		"data" : {
+			"szenarioname" : "drittesSzenario",
+			"floorplanJSONref" : "B2_F2_with_fiktiv_barriers_NMH.json",
+			"modelX3Dref" : "Deer.x3d",
+			"startpoint" : {
+				"x" : 5,
+				"y" : 3
+			},
+			"endpoint" : {
+				"x" : 42.5,
+				"y" : 2
+			}
+		}
+	}, {
+		"url" : "newPath",
+		"data" : {
+			"szenarioname" : "drittesSzenario",
+			"newPath" : [{
+					"x" : 5,
+					"y" : 3
+				}, {
+					"x" : 6.328125,
+					"y" : 3.732708321335859
+				}, {
+					"x" : 9.31640625,
+					"y" : 2.67968661580376
+				}, {
+					"x" : 12.65625,
+					"y" : 3.9519408561575946
+				}, {
+					"x" : 18.10546875,
+					"y" : 4.346411275333206
+				}, {
+					"x" : 22.412109375,
+					"y" : 4.214943141390651
+				}, {
+					"x" : 23.37890625,
+					"y" : 2.591888984149953
+				}, {
+					"x" : 25.751953125,
+					"y" : 2.591888984149953
+				}, {
+					"x" : 28.212890625,
+					"y" : 1.6696855009865839
+				}, {
+					"x" : 34.32128906249999,
+					"y" : 2.6357885741666065
+				}, {
+					"x" : 36.3427734375,
+					"y" : 1.6257583604127677
+				}, {
+					"x" : 39.90234375,
+					"y" : 1.6696855009865839
+				}, {
+					"x" : 40.2099609375,
+					"y" : 2.5040852618529215
+				}, {
+					"x" : 41.8359375,
+					"y" : 2.67968661580376
+				}, {
+					"x" : 42.5,
+					"y" : 2
+				}
+
+			]
+
+		}
+
+	}, {
+		"url" : "actualPosition",
+		"data" : {
+			"szenarioname" : "drittesSzenario",
+			"actualPosition" : {
+				"point" : {
+					"x" : 6.328125,
+					"y" : 3.732708321335859
+				},
+				"orientation" : {
+					"x" : 1,
+					"y" : 2
+				}
+			}
+		}
+	}, {
+		"url" : "actualPosition",
+		"data" : {
+			"szenarioname" : "drittesSzenario",
+			"actualPosition" : {
+				"point" : {
+					"x" : 9.31640625,
+					"y" : 2.67968661580376
+				},
+				"orientation" : {
+					"x" : 1,
+					"y" : 2
+				}
+			}
+		}
+	}, {
+		"url" : "actualPosition",
+		"data" : {
+			"szenarioname" : "drittesSzenario",
+			"actualPosition" : {
+				"point" : {
+					"x" : 12.65625,
+					"y" : 3.9519408561575946
+				},
+				"orientation" : {
+					"x" : 1,
+					"y" : 2
+				}
+			}
+		}
+	}, {
+		"url" : "newPath",
+		"data" : {
+			"szenarioname" : "drittesSzenario",
+			"newPath" : [{
+					"x" : 5,
+					"y" : 3
+				}, {
+					"x" : 6.328125,
+					"y" : 3.732708321335859
+				}, {
+					"x" : 9.31640625,
+					"y" : 2.67968661580376
+				}, {
+					"x" : 12.65625,
+					"y" : 3.9519408561575946
+				}, {
+					"x" : 14.0185546875,
+					"y" : 2.152813583128846
+				}, {
+					"x" : 18.1494140625,
+					"y" : 1.4939713066293239
+				}, {
+					"x" : 21.97265625,
+					"y" : 1.537901237431487
+				}, {
+					"x" : 23.37890625,
+					"y" : 2.591888984149953
+				}, {
+					"x" : 25.751953125,
+					"y" : 2.591888984149953
+				}, {
+					"x" : 28.212890625,
+					"y" : 1.6696855009865839
+				}, {
+					"x" : 34.32128906249999,
+					"y" : 2.6357885741666065
+				}, {
+					"x" : 36.3427734375,
+					"y" : 1.6257583604127677
+				}, {
+					"x" : 39.90234375,
+					"y" : 1.6696855009865839
+				}, {
+					"x" : 40.2099609375,
+					"y" : 2.5040852618529215
+				}, {
+					"x" : 41.8359375,
+					"y" : 2.67968661580376
+				}, {
+					"x" : 42.5,
+					"y" : 2
+				}
+
+			]
+
+		}
+
+	},
+	{
+		"url" : "actualPosition",
+		"data" : {
+			"szenarioname" : "drittesSzenario",
+			"actualPosition" : {
+				"point" : {
+					"x" : 14.0185546875,
+					"y" : 2.152813583128846
+				},
+				"orientation" : {
+					"x" : 1,
+					"y" : 2
+				}
+			}
+		}
+	}, {
+		"url" : "actualPosition",
+		"data" : {
+			"szenarioname" : "drittesSzenario",
+			"actualPosition" : {
+				"point" : {
+					"x" : 18.1494140625,
+					"y" : 1.4939713066293239
+				},
+				"orientation" : {
+					"x" : 1,
+					"y" : 2
+				}
+			}
+		}
+	}, {
+		"url" : "actualPosition",
+		"data" : {
+			"szenarioname" : "drittesSzenario",
+			"actualPosition" : {
+				"point" : {
+					"x" : 21.97265625,
+					"y" : 1.537901237431487
+				},
+				"orientation" : {
+					"x" : 1,
+					"y" : 2
+				}
+			}
+		}
+	}, {
+		"url" : "actualPosition",
+		"data" : {
+			"szenarioname" : "drittesSzenario",
+			"actualPosition" : {
+				"point" : {
+					"x" : 23.37890625,
+					"y" : 2.591888984149953
+				},
+				"orientation" : {
+					"x" : 1,
+					"y" : 2
+				}
+			}
+		}
+	}, {
+		"url" : "actualPosition",
+		"data" : {
+			"szenarioname" : "drittesSzenario",
+			"actualPosition" : {
+				"point" :
+				{
+					"x" : 25.751953125,
+					"y" : 2.591888984149953
+				},
+				"orientation" : {
+					"x" : 1,
+					"y" : 2
+				}
+			}
+		}
+	}, {
+		"url" : "actualPosition",
+		"data" : {
+			"szenarioname" : "drittesSzenario",
+			"actualPosition" : {
+				"point" :
+				{
+					"x" : 28.212890625,
+					"y" : 1.6696855009865839
+				},
+				"orientation" : {
+					"x" : 1,
+					"y" : 2
+				}
+			}
+		}
+	}, {
+		"url" : "actualPosition",
+		"data" : {
+			"szenarioname" : "drittesSzenario",
+			"actualPosition" : {
+				"point" :
+				{
+					"x" : 34.32128906249999,
+					"y" : 2.6357885741666065
+				},
+				"orientation" : {
+					"x" : 1,
+					"y" : 2
+				}
+			}
+		}
+	}, {
+		"url" : "actualPosition",
+		"data" : {
+			"szenarioname" : "drittesSzenario",
+			"actualPosition" : {
+				"point" :
+				{
+					"x" : 36.3427734375,
+					"y" : 1.6257583604127677
+				},
+				"orientation" : {
+					"x" : 1,
+					"y" : 2
+				}
+			}
+		}
+	}, {
+		"url" : "actualPosition",
+		"data" : {
+			"szenarioname" : "drittesSzenario",
+			"actualPosition" : {
+				"point" :
+				{
+					"x" : 39.90234375,
+					"y" : 1.6696855009865839
+				},
+				"orientation" : {
+					"x" : 1,
+					"y" : 2
+				}
+			}
+		}
+	}, {
+		"url" : "actualPosition",
+		"data" : {
+			"szenarioname" : "drittesSzenario",
+			"actualPosition" : {
+				"point" :
+				{
+					"x" : 40.2099609375,
+					"y" : 2.5040852618529215
+				},
+				"orientation" : {
+					"x" : 1,
+					"y" : 2
+				}
+			}
+		}
+	}, {
+		"url" : "actualPosition",
+		"data" : {
+			"szenarioname" : "drittesSzenario",
+			"actualPosition" : {
+				"point" :
+				{
+					"x" : 41.8359375,
+					"y" : 2.67968661580376
+				},
+				"orientation" : {
+					"x" : 1,
+					"y" : 2
+				}
+			}
+		}
+	}, {
+		"url" : "actualPosition",
+		"data" : {
+			"szenarioname" : "drittesSzenario",
+			"actualPosition" : {
+				"point" :
+				{
+					"x" : 42.5,
+					"y" : 2
+				},
+				"orientation" : {
+					"x" : 1,
+					"y" : 2
+				}
+			}
+		}
+	}
+]

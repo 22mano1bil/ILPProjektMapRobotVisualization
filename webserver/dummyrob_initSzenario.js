@@ -15,7 +15,7 @@ console.log(data);
 async.eachSeries(data, function(json, cb) {
     if(json.url.indexOf("initSzenario") > -1){
         client.post('/'+json.url, json.data, function(err, res, body) {
-          console.log(res.body);
+//          console.log(res.body);
         });
 //        setTimeout(cb,10000);
         cb();

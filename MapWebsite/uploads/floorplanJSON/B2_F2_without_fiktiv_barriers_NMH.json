@@ -1,0 +1,187 @@
+{
+  "type": "FeatureCollection",
+  "properties": {
+    "possibleways":{
+      "longway":{
+        "startpoint":[
+          5,
+          3
+        ],
+        "endpoint":[
+          42.5,
+          2
+        ]
+      },
+	  "middleway":{
+        "startpoint":[
+          5,
+          3
+        ],
+        "endpoint":[
+          25,
+          2.5
+        ]
+      },
+	  "shortway":{
+        "startpoint":[
+          5,
+          3
+        ],
+        "endpoint":[
+          13,
+          2
+        ]
+      }
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              5.3
+            ],
+            [
+              36,
+              5.3
+            ],
+            [
+              36,
+              3.4
+            ],
+            [
+              44.5,
+              3.4
+            ],
+            [
+              44.5,
+              1
+            ],
+            [
+              10.13,
+              1
+            ],
+            [
+              10.13,
+              1.3
+            ],
+            [
+              9.73,
+              1.3
+            ],
+            [
+              9.73,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              15,
+              3
+            ],
+            [
+              16.6,
+              3
+            ],
+            [
+              16.6,
+              3.6
+            ],
+            [
+              15,
+              3.6
+            ],
+            [
+              15,
+              3
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              20,
+              2.5
+            ],
+            [
+              21.1,
+              2.5
+            ],
+            [
+              21.1,
+              3.7
+            ],
+            [
+              20,
+              3.7
+            ],
+            [
+              20,
+              2.5
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              27,
+              2.9
+            ],
+            [
+              28.6,
+              2.9
+            ],
+            [
+              28.6,
+              3.5
+            ],
+            [
+              27,
+              3.5
+            ],
+            [
+              27,
+              2.9
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
